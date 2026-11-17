@@ -1,0 +1,18 @@
+<section id="rta-pp" class="accent">
+<div class="head">
+<p class="eyebrow">Análise · demais callbacks (Lemas 4 e 5, Eq. 6)</p>
+<h2>Com polling points, a prioridade deixa de proteger</h2>
+</div>
+<p class="eq" style="background:#095B69; border-color:#3E8F9C; color:#F4F5F1; font-size:34px;">sbf(A + Rᵢ) ≥ rbfᵢ(A + 1) + RBF(Cₖ \ {cᵢ}, A + Rᵢ − eᵢ + 1)</p>
+<div class="cols">
+<div class="stack" style="gap:12px;">
+<h3>Cₖ \ {cᵢ}: todas as outras</h3>
+<p style="font-size:30px;">Não há hp(i) nem Bᵢ. No pior caso, a callback chega logo após um polling point e espera a janela inteira, com qualquer prioridade.</p>
+</div>
+<div class="stack" style="gap:12px;">
+<h3>Consequência de projeto</h3>
+<p style="font-size:30px;">A ordem de registro não reduz o limite. Para proteger uma cadeia crítica, é preciso <b>separá-la em outra reserva</b>.</p>
+</div>
+</div>
+<aside>Este é o resultado central do artigo. O Lema 5 mostra que o pior caso é a callback começar logo depois de um polling point (X = 0). Por isso as callbacks de prioridade maior e menor entram igual na soma. A conclusão de projeto é usar reservas separadas para o que é crítico, que foi o que eles fizeram no move_base. Vamos ver isso nos números da nossa calculadora.</aside>
+</section>

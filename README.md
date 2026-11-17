@@ -10,7 +10,8 @@ Dupla: Vinícius Rafael e José Anderson.
 
 | Pasta | O que tem |
 |---|---|
-| [`slides/`](slides/) | Slides da apresentação (30 min) |
+| [`slides/`](slides/) | Slides da apresentação (30 min): link, fonte e roteiro |
+| [`artefatos/`](artefatos/) | Material de apoio: resumo do artigo, situação atual e análise do executor no Jazzy |
 | [`demo/rta/`](demo/rta/) | Calculadora em Python da análise de tempo de resposta do artigo (Lemas 2–8) |
 | [`demo/ros2_ws/`](demo/ros2_ws/) | Nó ROS 2 que reproduz o experimento de validação do executor (Fig. 3 do artigo) |
 | [`demo/gantt.py`](demo/gantt.py) | Gera o diagrama de Gantt a partir do trace do nó ROS 2 |

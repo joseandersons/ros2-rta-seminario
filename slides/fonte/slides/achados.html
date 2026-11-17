@@ -1,0 +1,17 @@
+<section id="achados">
+<div class="head">
+<p class="eyebrow">Resultado da demo</p>
+<h2>O que mudou entre o Crystal (2018) e o Jazzy (2024)</h2>
+</div>
+<table>
+<tr><th style="width:34%;">Comportamento</th><th style="width:24%;">Artigo · Crystal</th><th style="width:30%;">Nossa demo · Jazzy</th><th style="width:12%;">Status</th></tr>
+<tr><td>Mensagem no meio da janela</td><td>Espera o polling point</td><td>Espera o polling point</td><td>igual</td></tr>
+<tr><td>Instâncias por janela</td><td>Uma por callback</td><td>Uma por callback</td><td>igual</td></tr>
+<tr><td>Ordem entre tipos</td><td>Timer, sub, service</td><td>Timer, sub, service</td><td>igual</td></tr>
+<tr class="hl"><td>Timers e o polling point</td><td>Não esperam</td><td>Esperam a janela</td><td>mudou</td></tr>
+<tr class="hl"><td>Ordem dentro do tipo</td><td>Ordem de registro</td><td>Invertida (L, M, H)</td><td>mudou</td></tr>
+<tr><td>EventsExecutor (novo)</td><td>Não existia</td><td>Ordem de chegada</td><td>novo</td></tr>
+</table>
+<p class="small">A ordem invertida apareceu em 2 execuções. A causa está no código do rclcpp: as callbacks ficam num <span class="mono">std::unordered_map</span>.</p>
+<aside>Este é o slide que responde “o conteúdo continua válido?”. A essência do modelo continua, mas duas premissas caíram. O Lema 3 (timers privilegiados) não vale mais: os timers caem na Eq. 6, como as demais callbacks. E a prioridade por ordem de registro deixou de existir no Jazzy. A comunidade registrou isso na issue ros2/rclcpp#2532, aberta por alguém que rodou o próprio código dos autores do artigo.</aside>
+</section>

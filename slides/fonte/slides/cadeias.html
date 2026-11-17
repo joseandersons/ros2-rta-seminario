@@ -1,0 +1,21 @@
+<section id="cadeias">
+<div class="head">
+<p class="eyebrow">Análise · cadeias (Seções 5.1 e 5.4)</p>
+<h2>Somar callback por callback conta a mesma rajada várias vezes</h2>
+</div>
+<div class="cols" style="align-items:start;">
+<div class="card">
+<p class="pill warn">CPA básico</p>
+<h3>Soma dos tempos de resposta</h3>
+<p class="small">O atraso de cada callback vira jitter na próxima, e o cálculo itera até convergir. Simples e seguro, mas cada callback paga de novo a rajada de interferência.</p>
+<p class="eq" style="font-size:28px;">R = Σ Rᵢ + Σ δ</p>
+</div>
+<div class="card cool">
+<p class="pill ok">Lema 8</p>
+<h3>Subcadeia analisada inteira</h3>
+<p class="small">Callbacks seguidas na mesma reserva são tratadas como um bloco com WCET somado. A rajada é paga uma vez só (<i>pay burst only once</i>).</p>
+<p class="eq" style="font-size:28px;">sbf(R) ≥ RBF(Γₖ, R − e_último + 1)</p>
+</div>
+</div>
+<aside>Este slide explica por que o artigo propõe a análise holística. Na nossa calculadora, a mesma cadeia dá 441 ms somando e 104 ms com o Lema 8. Γₖ é o conjunto de subcadeias da reserva; callbacks que não fazem parte da cadeia entram como subcadeias de um elemento só.</aside>
+</section>

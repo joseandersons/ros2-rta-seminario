@@ -1,0 +1,14 @@
+<section id="mudancas" class="alt">
+<div class="head">
+<p class="eyebrow">Situação atual · o executor</p>
+<h2>O executor mudou várias vezes desde o artigo</h2>
+</div>
+<div class="cols" style="grid-template-columns:1fr 1fr 1fr 1fr; gap:24px;">
+<div class="card"><p class="pill">Eloquent · 2019</p><h3>Timers com polling</h3><p class="small">Os timers passam a esperar o polling point. O Lema 3 deixa de valer.</p></div>
+<div class="card"><p class="pill">Iron · 2023</p><h3>EventsExecutor</h3><p class="small">Executor experimental por fila de eventos: ordem de chegada, sem readySet.</p></div>
+<div class="card hot"><p class="pill warn">Jazzy · 2024</p><h3>Ordem arbitrária</h3><p class="small">A ordem de registro deixa de valer. Issue rclcpp#2532, ainda aberta.</p></div>
+<div class="card"><p class="pill">2025–2026</p><h3>Novos executores</h3><p class="small">StaticSingleThreaded removido; chega o EventsCBGExecutor.</p></div>
+</div>
+<p class="lead">O modelo de 2019 dependia de detalhes de implementação que não eram garantia da API.</p>
+<aside>Fontes: Blaß et al. RTSS 2021 e Dust et al. ETFA 2023 para os timers; changelog do rclcpp para o EventsExecutor; issue 2532 e o código para a ordem no Jazzy. A mensagem: quem usar a análise hoje precisa revalidar o modelo para a versão do ROS 2 que está usando. Foi exatamente o que nossa demo fez.</aside>
+</section>

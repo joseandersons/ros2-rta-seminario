@@ -1,0 +1,23 @@
+{
+  "v": 5,
+  "createdOnFiles": {"v": 1, "at": "2026-11-17T12:00:00Z"},
+  "lists": "css",
+  "format": {"v": 1, "shared": ["project/deck.css"]},
+  "title": "RTA de Cadeias ROS 2",
+  "order": ["cover", "roteiro", "motivacao", "ros2", "executor", "polling", "reservas", "modelo", "rta-timers", "rta-pp", "cadeias", "movebase", "demo-rta", "demo-ros2", "achados", "linha-tempo", "mudancas", "aulas", "critica", "contribuicoes", "fim"],
+  "sections": {
+    "s1": {"description": "Abertura: o problema de garantir tempo em cadeias de callbacks do ROS 2", "start": "cover"},
+    "s2": {"description": "Como o executor do ROS 2 escalona as callbacks", "start": "ros2"},
+    "s3": {"description": "Modelo com reservas e análise de tempo de resposta", "start": "reservas"},
+    "s4": {"description": "Estudo de caso move_base", "start": "movebase"},
+    "s5": {"description": "Demonstração: calculadora de RTA e experimento no ROS 2 Jazzy", "start": "demo-rta"},
+    "s6": {"description": "Situação atual: trabalhos posteriores e mudanças no executor", "start": "linha-tempo"},
+    "s7": {"description": "Ligação com a disciplina, crítica e conclusão", "start": "aulas"}
+  },
+  "faces": {
+    "space-grotesk": {"family": "Space Grotesk", "href": "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&display=swap"},
+    "inter": {"family": "Inter", "href": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"},
+    "jetbrains-mono": {"family": "JetBrains Mono", "href": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap"}
+  },
+  "designSystems": []
+}

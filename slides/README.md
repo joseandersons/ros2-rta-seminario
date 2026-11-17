@@ -1,8 +1,22 @@
 # Slides
 
-Coloque aqui o arquivo da apresentação (`.pptx` ou `.pdf`).
+A apresentação (21 slides, com notas do apresentador) está no claude.ai:
+https://claude.ai/artifact/C6cRoy8i63BAKHB3GSnhr7
 
-Roteiro previsto (30 min):
+- Para apresentar: abra o link e use o modo de apresentação.
+- Para baixar em PowerPoint ou PDF: menu **Share › Export** na página da apresentação. Coloque o arquivo exportado nesta pasta.
+
+## Fonte
+
+A pasta [`fonte/`](fonte/) guarda uma cópia do código dos slides:
+
+- `deck.json`: título, ordem dos slides e fontes;
+- `deck.css`: estilo compartilhado;
+- `slides/<id>.html`: um arquivo por slide, com as notas do apresentador no `<aside>` final.
+
+As imagens (`/_blob/...`) ficam guardadas na própria apresentação. Os originais estão em `demo/rta/sweep.png` e `demo/results/`.
+
+## Roteiro (30 min)
 
 | Tempo | Bloco |
 |---|---|

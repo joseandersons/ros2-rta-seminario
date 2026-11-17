@@ -1,0 +1,23 @@
+<section id="executor">
+<div class="head">
+<p class="eyebrow">O executor (Seção 3)</p>
+<h2>Um escalonador não preemptivo que olha uma foto do sistema</h2>
+</div>
+<div class="row" style="justify-content:center; gap:16px;">
+<p class="box wait" style="width:240px;">Polling point<br><span style="font-weight:400;">tira a foto</span></p>
+<x-shape kind="arrow-right" style="width:60px; height:30px; background:#4A5866;"></x-shape>
+<p class="box timer" style="width:240px;">Timers</p>
+<x-shape kind="arrow-right" style="width:60px; height:30px; background:#4A5866;"></x-shape>
+<p class="box sub" style="width:240px;">Subscribers</p>
+<x-shape kind="arrow-right" style="width:60px; height:30px; background:#4A5866;"></x-shape>
+<p class="box" style="width:240px;">Services</p>
+<x-shape kind="arrow-right" style="width:60px; height:30px; background:#4A5866;"></x-shape>
+<p class="box" style="width:240px;">Clients</p>
+</div>
+<div class="cols3">
+<div class="card cool"><h3>readySet</h3><p class="small">No polling point, o executor guarda o <b>conjunto</b> de callbacks prontas e só volta a olhar quando ele esvazia.</p></div>
+<div class="card cool"><h3>Prioridade fixa</h3><p class="small">Primeiro o tipo (da esquerda para a direita), depois a ordem em que a callback foi registrada.</p></div>
+<div class="card hot"><h3>Timers à parte</h3><p class="small">No Crystal, os timers eram checados a cada escolha, sem esperar o polling point.</p></div>
+</div>
+<aside>Este é o comportamento que os autores descobriram lendo o código-fonte, porque não havia documentação. O intervalo entre dois polling points é a “janela de processamento”. Guardem o card dos timers: é exatamente o que mudou nas versões seguintes, e vamos mostrar isso na demo.</aside>
+</section>

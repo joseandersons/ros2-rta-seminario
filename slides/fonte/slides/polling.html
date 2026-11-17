@@ -1,0 +1,13 @@
+<section id="polling" class="dark">
+<div class="head">
+<p class="eyebrow">Consequência dos polling points</p>
+<h2>A prioridade alta pode esperar uma janela inteira de prioridade baixa</h2>
+</div>
+<div class="cols3">
+<div class="card"><h3>Chegou tarde, espera</h3><p class="small">Uma mensagem que chega no meio da janela só entra no próximo polling point, mesmo que seja a mais prioritária.</p></div>
+<div class="card"><h3>Uma por janela</h3><p class="small">O readySet é um conjunto: com 3 mensagens na fila, a callback roda uma vez por janela e leva 3 janelas.</p></div>
+<div class="card"><h3>Inversão de prioridade</h3><p class="small">Callbacks de prioridade menor atrasam a maior, como no Mars Pathfinder (aula 10).</p></div>
+</div>
+<p class="lead">Os autores confirmaram o modelo com um experimento: tópicos H, M, L, services SH, SM, SL e timers, todos com 500 ms de execução (Fig. 3). <b style="color:#6FC3D1;">Nós repetimos esse experimento no ROS 2 atual.</b></p>
+<aside>Este é o resultado que mais importa da Seção 3. Ligação com a aula 10: no Mars Pathfinder, uma tarefa de prioridade baixa segurava um recurso e a de prioridade alta esperava. Aqui não há mutex, mas o efeito é parecido: a janela em andamento, cheia de callbacks de prioridade menor, atrasa a de prioridade maior. Anunciar que vamos mostrar isso ao vivo na demo.</aside>
+</section>

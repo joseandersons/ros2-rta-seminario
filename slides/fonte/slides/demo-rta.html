@@ -1,0 +1,23 @@
+<section id="demo-rta">
+<div class="head">
+<p class="eyebrow">Demo 1 · calculadora em Python</p>
+<h2>As equações do artigo num exemplo de 6 callbacks</h2>
+</div>
+<div class="row" style="align-items:start; gap:56px;">
+<img class="shot" src="/_blob/e28de955d34cbd269121f44601d2ec7e" alt="Gráfico da latência da cadeia sensor, filtro e controle em função do orçamento da reserva: a soma dos tempos de resposta cai de 1304 ms a 134 ms e a análise holística de 204 ms a 52 ms entre 50% e 100% do núcleo" style="width:720px; height:540px;">
+<div class="stack grow" style="gap:28px;">
+<div class="stack" style="gap:4px;">
+<p class="small">s_filtro, subscriber de maior prioridade</p>
+<p style="font-size:44px; font-weight:600;">74 ms → <span style="color:#B8730F;">199 ms</span></p>
+<p class="note">análise clássica → regras do ROS 2 (Eq. 6)</p>
+</div>
+<div class="stack" style="gap:4px;">
+<p class="small">Cadeia sensor → filtro → controle</p>
+<p style="font-size:44px; font-weight:600;">441 ms → <span style="color:#0B6E7F;">104 ms</span></p>
+<p class="note">soma dos R → análise holística (Lema 8)</p>
+</div>
+<p class="small">Com reserva de 40% ou menos, a análise não converge.</p>
+</div>
+</div>
+<aside>Rodar ao vivo no Windows: cd seminario\demo\rta e depois python rta_ros2.py. Exemplo: reserva de 6 ms a cada 10 ms (60%), com 3 timers e 3 subscribers. Mostrar a tabela impressa e apontar os dois números. O gráfico é a nossa versão da Fig. 8a do artigo.</aside>
+</section>

@@ -1,0 +1,20 @@
+<section id="rta-timers">
+<div class="head">
+<p class="eyebrow">Análise · timers (Lemas 2 e 3)</p>
+<h2>Para timers, é a RTA da aula com bloqueio não preemptivo</h2>
+</div>
+<div class="cols" style="align-items:start;">
+<div class="stack">
+<p class="pill">Aula: prioridade fixa preemptiva</p>
+<p class="eq">Rᵢ = Cᵢ + Σⱼ∈hp(i) ⌈Rᵢ / Tⱼ⌉ · Cⱼ</p>
+<p class="small">Itera até o ponto fixo; o tempo passa a 1 unidade por unidade.</p>
+</div>
+<div class="stack">
+<p class="pill ok">Artigo: timer dentro de uma reserva</p>
+<p class="eq">sbf(A + Rᵢ) ≥ rbfᵢ(A + 1)<br>  + RBF(hp(i), A + Rᵢ − eᵢ + 1)<br>  + Bᵢ</p>
+<p class="small"><b>Bᵢ</b> = maior eⱼ de prioridade menor: a callback que já começou termina antes (Lema 2).</p>
+</div>
+</div>
+<p class="lead">Três ajustes: <b>sbf</b> no lugar do tempo, <b>bloqueio</b> não preemptivo e interferência só até o timer começar (<b>− eᵢ</b>).</p>
+<aside>Mostrar que não é nada de outro mundo: é a análise de tempo de resposta que vimos na aula, adaptada. rbf é a demanda (ativações vezes WCET). O A é o instante de liberação dentro do busy period; os Lemas 6 e 7 limitam quantos valores de A precisam ser testados. Este lema vale para timers porque, no Crystal, eles não esperavam o polling point.</aside>
+</section>

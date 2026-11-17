@@ -1,0 +1,21 @@
+<section id="motivacao">
+<div class="head">
+<p class="eyebrow">Motivação</p>
+<h2>Quanto tempo vai do sensor ao atuador, no pior caso?</h2>
+</div>
+<div class="row" style="justify-content:center; gap:20px;">
+<p class="box" style="width:300px;">Sensor<br>(odometria)</p>
+<x-shape kind="arrow-right" style="width:72px; height:36px; background:#4A5866;"></x-shape>
+<p class="box sub" style="width:300px;">Callback<br>de filtro</p>
+<x-shape kind="arrow-right" style="width:72px; height:36px; background:#4A5866;"></x-shape>
+<p class="box sub" style="width:300px;">Callback<br>de controle</p>
+<x-shape kind="arrow-right" style="width:72px; height:36px; background:#4A5866;"></x-shape>
+<p class="box" style="width:300px;">Atuador<br>(rodas)</p>
+</div>
+<div class="cols3">
+<div class="card"><h3>Middleware escalona</h3><p class="small">O ROS 2 decide a ordem das callbacks por conta própria, por cima do escalonador do Linux.</p></div>
+<div class="card"><h3>Componentes de terceiros</h3><p class="small">Pacotes escritos por equipes diferentes escondem o comportamento temporal do todo.</p></div>
+<div class="card"><h3>Cadeias por eventos</h3><p class="small">Uma callback publica, outra acorda: a latência se acumula ao longo da cadeia.</p></div>
+</div>
+<aside>Tempo real é garantia, não velocidade (aula 1). Num robô, o tempo entre o sensor detectar um obstáculo e as rodas reagirem é requisito de segurança. Antes deste artigo, quem usava ROS 2 só conseguia medir esse tempo depois de implementar tudo; não havia análise. Os três cards são os motivos que o artigo dá para isso ser difícil.</aside>
+</section>

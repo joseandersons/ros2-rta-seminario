@@ -1,0 +1,20 @@
+<section id="reservas">
+<div class="head">
+<p class="eyebrow">Reservas de processador (Seção 2.2)</p>
+<h2>Cada executor ganha um orçamento garantido de CPU</h2>
+</div>
+<div class="cols" style="align-items:start;">
+<ul class="points">
+<li>Uma reserva garante <b>Q</b> unidades de CPU a cada período <b>P</b>.</li>
+<li>No Linux: <span class="mono">SCHED_DEADLINE</span>, que implementa o <b>Constant Bandwidth Server</b> (CBS), um servidor baseado em EDF (aulas 7 e 8).</li>
+<li>Isola os executores: um executor que atrasa não rouba tempo dos outros.</li>
+<li>A análise só precisa da <b>sbf(Δ)</b>: o mínimo de CPU que a reserva entrega em qualquer janela Δ.</li>
+</ul>
+<div class="stack">
+<p class="eq">y = ⌊(Δ − (P − Q)) / P⌋<br>sbf(Δ) = y·Q + max(0, Δ − 2(P − Q) − y·P)</p>
+<p class="small">Pior caso: até <b>2(P − Q)</b> sem receber CPU.</p>
+<p class="eq">Núcleo dedicado com SCHED_FIFO:<br>sbf(Δ) = Δ</p>
+</div>
+</div>
+<aside>A ideia do artigo é que cada executor rode dentro de uma reserva. Assim o sistema se divide em partes que podem ser analisadas separadamente. A fórmula da sbf é a do modelo de recurso periódico (Shin e Lee); é a que usamos na nossa calculadora. Ligação com as aulas: o CBS é um servidor sobre EDF, e a sbf faz o papel do “tempo disponível” na análise de tempo de resposta.</aside>
+</section>

@@ -1,0 +1,22 @@
+<section id="ros2" class="alt">
+<div class="head">
+<p class="eyebrow">ROS 2 em um slide</p>
+<h2>Nós, tópicos e callbacks executados por um executor</h2>
+</div>
+<div class="cols" style="grid-template-columns:1.1fr 0.9fr; align-items:start;">
+<ul class="points">
+<li>Nós publicam mensagens em tópicos; quem assina é acordado por uma <b>callback</b>.</li>
+<li>Quatro tipos de callback: <b>timers</b>, <b>subscribers</b>, <b>services</b> e <b>clients</b>.</li>
+<li>Um <b>executor</b> é uma thread que roda várias callbacks, uma de cada vez, até o fim.</li>
+<li>O artigo analisa o executor <b>single-threaded</b> do ROS 2 “Crystal” (dez/2018), em C++.</li>
+</ul>
+<div class="stack" style="gap:12px;">
+<p class="box" style="border-color:#14202B;">Aplicação (nós e callbacks)</p>
+<p class="box">rclcpp · <b>executor</b></p>
+<p class="box" style="border-color:#C9D1D3;">rcl · rmw</p>
+<p class="box" style="border-color:#C9D1D3;">DDS (publish-subscribe)</p>
+<p class="box wait">Linux</p>
+</div>
+</div>
+<aside>Explicar o mínimo de ROS 2 para o resto fazer sentido. O ponto central: o executor é um escalonador dentro do middleware. Ele é não preemptivo, porque cada callback roda até terminar. A comunicação entre nós é troca de mensagens assíncrona, como vimos na aula 9.</aside>
+</section>

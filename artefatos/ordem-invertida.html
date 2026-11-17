@@ -1,0 +1,215 @@
+<title>Executor ROS 2 no Jazzy</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@500;600&display=swap">
+<style>
+/* Layout: relatório técnico de uma coluna; faixas de evidência (trace, código, teste) alternam com o texto */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --fg: #1c2330;
+  --muted: #5a6475;
+  --line: #dde1e8;
+  --accent: #0b6e7f;       /* azul-petróleo: services no Gantt */
+  --timer: #c4404f;        /* vermelho: timers */
+  --sub: #d9921c;          /* âmbar: subscribers */
+  --srv: #0b6e7f;
+  --code-bg: #eef1f5;
+  --ok: #2f7d4f;
+  --warn: #a8551a;
+  --font-display: "Space Grotesk", "IBM Plex Sans", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa4b4; --line: #2c3442;
+    --accent: #4fb3c4; --timer: #e46b78; --sub: #f0b24a; --srv: #4fb3c4; --code-bg: #202733;
+    --ok: #6cc28f; --warn: #e89a5c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa4b4; --line: #2c3442;
+  --accent: #4fb3c4; --timer: #e46b78; --sub: #f0b24a; --srv: #4fb3c4; --code-bg: #202733;
+  --ok: #6cc28f; --warn: #e89a5c; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 16px/1.6 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 40px 64px;
+}
+main { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+header { display: flex; flex-direction: column; gap: 10px; }
+.eyebrow { font: 500 12px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { font: 600 clamp(28px, 5vw, 40px)/1.15 var(--font-display); margin: 0; text-wrap: balance; }
+h2 { font: 600 22px/1.25 var(--font-display); margin: 0 0 12px; text-wrap: balance; }
+h3 { font: 600 16px/1.3 var(--font-body); margin: 0 0 6px; }
+p { margin: 0 0 12px; max-width: 68ch; }
+.lead { font-size: 18px; color: var(--muted); }
+section { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+a { color: var(--accent); }
+code { font: 14px var(--font-mono); background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+pre { margin: 8px 0 12px; background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; overflow-x: auto; font: 13px/1.55 var(--font-mono); }
+pre code { background: none; padding: 0; font-size: inherit; }
+.src { font: 12px var(--font-mono); color: var(--muted); margin-top: -6px; }
+.hl { background: color-mix(in srgb, var(--sub) 22%, transparent); border-radius: 3px; }
+.verdict { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; display: grid; gap: 14px; }
+.verdict-row { display: grid; grid-template-columns: 150px 1fr; gap: 12px; align-items: baseline; }
+.verdict-row dt { font: 500 13px var(--font-mono); color: var(--muted); }
+.verdict-row dd { margin: 0; }
+dl { margin: 0; display: grid; gap: 10px; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 12px var(--font-mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+tr:last-child td { border-bottom: 0; }
+.seq { font-family: var(--font-mono); font-size: 14px; white-space: nowrap; }
+.tag { display: inline-block; font: 500 12px var(--font-mono); padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.tag.same { color: var(--ok); }
+.tag.changed { color: var(--warn); }
+.t { color: var(--timer); font-weight: 500; }
+.s { color: var(--sub); font-weight: 500; }
+.v { color: var(--srv); font-weight: 500; }
+.steps { counter-reset: s; list-style: none; padding: 0; margin: 4px 0 12px; display: grid; gap: 12px; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 30px 1fr; gap: 10px; min-width: 0; }
+.steps li::before { content: counter(s); font: 600 14px var(--font-display); width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--surface); }
+.steps li > div { min-width: 0; }
+.slide { border-left: 3px solid var(--accent); padding: 4px 0 4px 16px; }
+.slide p { font-size: 17px; }
+footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; }
+@media (max-width: 520px) { .verdict-row { grid-template-columns: 1fr; gap: 2px; } }
+</style>
+
+<main>
+  <header>
+    <span class="eyebrow">Seminário STR · Casini et al., ECRTS 2019</span>
+    <h1>Por que o executor do ROS 2 Jazzy não segue mais o modelo do artigo</h1>
+    <p class="lead">No nosso experimento, a ordem dentro de cada tipo de callback saiu invertida e os timers passaram a esperar o polling point. Esta página mostra a causa no código do <code>rclcpp</code> e o que isso muda na análise.</p>
+  </header>
+
+  <section class="verdict" aria-label="Resumo">
+    <dl>
+      <div class="verdict-row"><dt>Ordem invertida</dt><dd>A ordem dentro de cada tipo vem da iteração de um <code>std::unordered_map</code> indexado por ponteiro. Ela não é mais a ordem de registro e não é garantida.</dd></div>
+      <div class="verdict-row"><dt>Timers</dt><dd>Agora entram no mesmo instantâneo do wait set que as outras callbacks. Eles <strong>esperam o polling point</strong>, e o Lema 3 do artigo deixa de valer.</dd></div>
+      <div class="verdict-row"><dt>Desde quando</dt><dd><strong>Timers:</strong> desde o Eloquent (fim de 2019), segundo Blaß et al. (RTSS 2021) e Dust et al. (ETFA 2023). <strong>Ordem:</strong> a de registro valeu do Eloquent ao Iron e virou arbitrária no Jazzy (2024). Isso está registrado na issue <a href="https://github.com/ros2/rclcpp/issues/2532">ros2/rclcpp#2532</a>, aberta e sem correção. As coleções em <code>unordered_map</code> foram criadas no PR <a href="https://github.com/ros2/rclcpp/pull/2143">#2143</a> (2023).</dd></div>
+      <div class="verdict-row"><dt>O que continua</dt><dd>Polling points, uma instância por callback por janela e a ordem entre tipos (timers, subscribers, services, clients).</dd></div>
+    </dl>
+  </section>
+
+  <section>
+    <h2>O que observamos</h2>
+    <p>Rodamos o experimento da Fig. 3 duas vezes no <code>SingleThreadedExecutor</code> do ROS 2 Jazzy (rclcpp 28.1.23), no WSL2. As callbacks foram registradas na ordem <span class="s">H, M, L</span> e <span class="v">SH, SM, SL</span>, e os timers na ordem <span class="t">t0, t1</span> e <span class="t">t2, t3</span>.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Aspecto</th><th>Artigo (Crystal, 2018)</th><th>Jazzy (2026)</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Subscribers na mesma janela</td><td class="seq"><span class="s">H M L</span></td><td class="seq"><span class="s">L M H</span></td><td><span class="tag changed">mudou</span></td></tr>
+          <tr><td>Services na mesma janela</td><td class="seq"><span class="v">SH SM SL</span></td><td class="seq"><span class="v">SL SM SH</span></td><td><span class="tag changed">mudou</span></td></tr>
+          <tr><td>Timers vencidos juntos</td><td class="seq"><span class="t">t0 t1</span></td><td class="seq"><span class="t">t1 t0</span>, <span class="t">t3 t2</span></td><td><span class="tag changed">mudou</span></td></tr>
+          <tr><td>Timer que vence no meio da janela</td><td>Executa na mesma janela</td><td><span class="t">t2/t3</span> vencem em 2300 ms e só rodam em 4000 ms</td><td><span class="tag changed">mudou</span></td></tr>
+          <tr><td>Mensagem que chega no meio da janela</td><td>Espera o próximo polling point</td><td><span class="v">SM</span> chega em 1500 ms e roda em 6500 ms</td><td><span class="tag same">igual</span></td></tr>
+          <tr><td>Instâncias por janela</td><td>No máximo uma por callback</td><td>As 3 mensagens <span class="s">H</span> rodam em 3 janelas</td><td><span class="tag same">igual</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="src">Ordem completa na 2ª execução: L M t1 t0 L M H SL SH t3 t2 H SL SM SH H SM</p>
+  </section>
+
+  <section>
+    <h2>Como o executor escolhe a próxima callback hoje</h2>
+    <pre class="mermaid">
+flowchart LR
+  W["wait_for_work()<br/>instantâneo do wait set<br/>(polling point)"] --> T["timers prontos<br/>no instantâneo"]
+  T --> S["subscriptions"] --> V["services"] --> C["clients"] --> X["waitables"]
+  X -->|"nada mais pronto"| W
+    </pre>
+    <p>Dentro de cada caixa, o executor percorre os arrays do wait set na ordem em que as entidades foram adicionadas a ele. Toda a questão está em como essa ordem é formada.</p>
+  </section>
+
+  <section>
+    <h2>A causa no código</h2>
+    <ol class="steps">
+      <li><div>
+        <h3>As entidades ficam num <code>unordered_map</code></h3>
+        <p>Cada tipo de callback é guardado numa coleção indexada pelo ponteiro do handle do <code>rcl</code>:</p>
+<pre><code>class EntityCollection
+  : public <span class="hl">std::unordered_map</span>&lt;const EntityKeyType *, CollectionEntry&lt;EntityValueType&gt;&gt;</code></pre>
+        <p class="src">rclcpp/include/rclcpp/executors/executor_entities_collection.hpp, linhas 99–100 (branch jazzy)</p>
+      </div></li>
+      <li><div>
+        <h3>O wait set é montado percorrendo esse mapa</h3>
+        <p>Em <code>collect_entities()</code>, cada entidade nova é adicionada ao wait set na ordem de iteração do mapa:</p>
+<pre><code>for (auto it = update_from.begin(); it != update_from.end(); ++it) {
+  if (update_to.count(it->first) == 0) {
+    ...
+    on_added(entity);   // wait_set_.add_subscription(...)</code></pre>
+        <p class="src">executor_entities_collection.hpp, linhas 86–91 · executor.cpp, linhas 662–700</p>
+      </div></li>
+      <li><div>
+        <h3>A escolha segue os arrays do wait set</h3>
+        <p><code>get_next_ready_executable()</code> pega primeiro os timers e depois <code>next_ready_subscription()</code>, <code>next_ready_service()</code> e <code>next_ready_client()</code>, sempre nessa ordem de array. Por isso a prioridade dentro do tipo virou a ordem de iteração do <code>unordered_map</code>.</p>
+        <p class="src">executor.cpp, linhas 779–880</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>A prova: o <code>unordered_map</code> sozinho inverte a ordem</h2>
+    <p>Compilamos este teste com o mesmo g++ do Ubuntu 24.04 usado pelo ROS 2. Ele insere três ponteiros na ordem H, M, L e depois percorre o mapa:</p>
+<pre><code>std::unordered_map&lt;const int*, char&gt; m;
+for (int i = 0; i &lt; 3; i++) {
+  v.emplace_back(new int(i));
+  m.insert({v.back().get(), "HML"[i]});
+}
+for (auto &amp; [k, c] : m) printf("%c ", c);</code></pre>
+<pre><code>$ ./um
+L M H</code></pre>
+    <p>É a mesma inversão do experimento. Na libstdc++ (a biblioteca padrão do GCC), um elemento que cai num bucket vazio entra no <strong>início</strong> da lista que a iteração percorre, então elementos inseridos depois aparecem antes.</p>
+    <p><strong>Cuidado:</strong> isso é detalhe de implementação, não uma regra. Com mais callbacks, colisões de bucket ou rehash, a ordem pode sair embaralhada em vez de simplesmente invertida. Outro compilador ou outra biblioteca padrão pode dar outra ordem.</p>
+  </section>
+
+  <section>
+    <h2>E os timers?</h2>
+    <p>No Crystal, o executor checava o estado dos timers diretamente a cada escolha, fora do readySet (Seção 3 do artigo). No Jazzy, <code>get_next_ready_executable()</code> só considera os timers marcados como prontos <strong>no resultado do último wait</strong> (<code>wait_result_->peek_next_ready_timer()</code>) e os remove desse resultado ao executar. Um timer que vence no meio da janela só é visto no próximo polling point.</p>
+    <p>No trace, <span class="t">t2</span> e <span class="t">t3</span> venceram em 2300 ms, durante a janela L, M, H, SL, SH, e só rodaram em 4002 ms, quando ela acabou.</p>
+    <p>Essa mudança é mais antiga que a da ordem. Blaß et al. (RTSS 2021), com Casini entre os autores, registram que só até o Dashing os timers eram privilegiados; a partir do Eloquent, eles também são amostrados no polling point. Dust et al. (ETFA 2023) confirmam isso com experimentos. O artigo de 2019 analisou o Crystal, logo antes da mudança.</p>
+  </section>
+
+  <section>
+    <h2>O que muda na análise do artigo</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Resultado do artigo</th><th>No Jazzy</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Lema 3</strong>: timers como prioridade fixa não preemptiva, com bloqueio de uma callback de prioridade menor</td><td>Não vale mais. Os timers também sofrem interferência de toda a janela em andamento.</td></tr>
+          <tr><td><strong>Eq. 6</strong>: callbacks baseadas em polling point sofrem interferência de todas as outras</td><td>Continua valendo e passa a servir também para os timers. É o limite seguro para qualquer callback.</td></tr>
+          <tr><td>Prioridade pela ordem de registro</td><td>Deixa de ser uma ferramenta de projeto: a ordem depende de endereços de memória e da biblioteca padrão.</td></tr>
+          <tr><td><strong>Lema 8</strong> e propagação de jitter (CPA)</td><td>A estrutura continua útil, mas os termos de interferência dos timers precisam ser revistos.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Sugestão de texto para o slide</h2>
+    <div class="slide">
+      <p><strong>O modelo de 2019 ainda vale?</strong> Em parte. Os polling points e a regra de uma instância por janela continuam no executor padrão. Mas, desde o Eloquent (2019), os timers também esperam o polling point. E, no Jazzy (2024), a ordem dentro de cada tipo deixou de ser a de registro: no nosso teste ela saiu invertida, por causa do <code>std::unordered_map</code>. A comunidade registrou isso na issue rclcpp#2532, ainda aberta. Hoje, o limite seguro é tratar todas as callbacks como no pior caso do artigo (Eq. 6).</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Como reproduzir</h2>
+    <p>No Ubuntu (WSL), com o repositório do seminário instalado:</p>
+<pre><code>bash ~/ros2-rta-seminario/demo/apresentar.sh single</code></pre>
+    <p>Para ler o código do executor:</p>
+<pre><code>git clone --depth 1 -b jazzy https://github.com/ros2/rclcpp.git
+less rclcpp/rclcpp/src/rclcpp/executor.cpp   # linhas 662 e 779</code></pre>
+  </section>
+
+  <footer>
+    Fontes: código do <a href="https://github.com/ros2/rclcpp/tree/jazzy">ros2/rclcpp (branch jazzy)</a>, commit 35b821a, de 3 nov. 2026; <a href="https://github.com/ros2/rclcpp/pull/2143">PR #2143</a>; <a href="https://github.com/ros2/rclcpp/issues/2532">issue #2532</a>; Blaß et al., RTSS 2021; Dust et al., ETFA 2023; experimento do repositório <a href="https://github.com/joseandersons/ros2-rta-seminario">ros2-rta-seminario</a>, executado em 17 nov. 2026. A explicação sobre a libstdc++ vem do teste mostrado acima e não foi confirmada na documentação da biblioteca.
+  </footer>
+</main>

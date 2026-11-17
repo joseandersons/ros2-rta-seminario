@@ -1,0 +1,301 @@
+<title>ROS 2 em tempo real depois de 2019</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@500;600&display=swap">
+<style>
+/* Layout: linha do tempo vertical (ano à esquerda, trabalho à direita) entre um veredito no topo e as conclusões no fim */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --fg: #1c2330;
+  --muted: #5a6475;
+  --line: #dde1e8;
+  --accent: #0b6e7f;
+  --code-bg: #eef1f5;
+  --ok: #2f7d4f;
+  --warn: #a8551a;
+  --bad: #b03a48;
+  --font-display: "Space Grotesk", "IBM Plex Sans", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa4b4; --line: #2c3442;
+    --accent: #4fb3c4; --code-bg: #202733; --ok: #6cc28f; --warn: #e89a5c; --bad: #e46b78; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa4b4; --line: #2c3442;
+  --accent: #4fb3c4; --code-bg: #202733; --ok: #6cc28f; --warn: #e89a5c; --bad: #e46b78; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 16px/1.6 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 40px 64px;
+}
+main { max-width: 820px; margin: 0 auto; display: flex; flex-direction: column; gap: 44px; }
+header { display: flex; flex-direction: column; gap: 10px; }
+.eyebrow { font: 500 12px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { font: 600 clamp(28px, 5vw, 40px)/1.15 var(--font-display); margin: 0; text-wrap: balance; }
+h2 { font: 600 22px/1.25 var(--font-display); margin: 0 0 14px; text-wrap: balance; }
+h3 { font: 600 17px/1.35 var(--font-body); margin: 0; text-wrap: balance; }
+p { margin: 0 0 10px; max-width: 70ch; }
+.lead { font-size: 18px; color: var(--muted); }
+a { color: var(--accent); }
+code { font: 14px var(--font-mono); background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+section { min-width: 0; }
+
+.verdict { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; display: grid; gap: 14px; }
+.verdict h2 { margin: 0; }
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.checks li { display: grid; grid-template-columns: 92px 1fr; gap: 12px; align-items: baseline; }
+.pill { font: 500 12px var(--font-mono); padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; text-align: center; white-space: nowrap; }
+.pill.ok { color: var(--ok); } .pill.warn { color: var(--warn); } .pill.bad { color: var(--bad); }
+
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.entry { display: grid; grid-template-columns: 64px 1fr; gap: 18px; position: relative; padding-bottom: 28px; }
+.entry::before { content: ""; position: absolute; left: 31px; top: 30px; bottom: 0; width: 1px; background: var(--line); }
+.entry:last-child::before { display: none; }
+.year { font: 600 15px/1 var(--font-display); color: var(--accent); background: var(--bg); padding-top: 6px; position: relative; z-index: 1; font-variant-numeric: tabular-nums; }
+.card { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.venue { font: 500 12px var(--font-mono); color: var(--muted); letter-spacing: .03em; }
+.ref { font-size: 14px; color: var(--muted); }
+.facts { display: grid; grid-template-columns: 128px 1fr; gap: 6px 14px; margin: 4px 0 0; font-size: 15px; }
+.facts dt { font: 500 12px/1.9 var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.facts dd { margin: 0; min-width: 0; }
+.key { border-left: 3px solid var(--warn); padding-left: 12px; }
+blockquote { margin: 4px 0; padding: 8px 12px; background: var(--code-bg); border-radius: 6px; font-size: 15px; }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 12px var(--font-mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+td:first-child { font-family: var(--font-mono); font-size: 14px; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+tr.ours td { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+
+.concl { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.concl li { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
+.concl strong { display: block; margin-bottom: 2px; }
+.unverified { font-size: 14px; color: var(--muted); }
+.unverified ul { margin: 6px 0 0; padding-left: 20px; }
+footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; }
+
+@media (max-width: 560px) {
+  .entry { grid-template-columns: 1fr; gap: 6px; }
+  .entry::before { display: none; }
+  .facts { grid-template-columns: 1fr; gap: 0 0; }
+  .facts dd { margin-bottom: 8px; }
+  .checks li { grid-template-columns: 1fr; gap: 4px; }
+  .checks .pill { justify-self: start; }
+}
+</style>
+
+<main>
+  <header>
+    <span class="eyebrow">Seminário STR · Casini et al., ECRTS 2019</span>
+    <h1>O que aconteceu com a análise de tempo real do ROS 2 depois de 2019</h1>
+    <p class="lead">Os trabalhos que vieram depois do artigo, o que mudou no executor do <code>rclcpp</code> e o que continua valendo. Material para os slides de "situação atual" e "crítica".</p>
+  </header>
+
+  <section class="verdict">
+    <h2>O modelo de 2019 ainda vale?</h2>
+    <ul class="checks">
+      <li><span class="pill ok">vale</span><span>O executor padrão continua não preemptivo, com polling points e no máximo uma instância por callback em cada janela.</span></li>
+      <li><span class="pill ok">vale</span><span>A ideia de isolar executores em reservas (SCHED_DEADLINE) e analisar cadeias com CPA é a base de quase toda a literatura posterior.</span></li>
+      <li><span class="pill bad">caiu</span><span>Timers privilegiados (Lema 3): desde o Eloquent (2019), os timers também esperam o polling point.</span></li>
+      <li><span class="pill bad">caiu</span><span>Prioridade pela ordem de registro: no Jazzy (2024) a ordem dentro de cada tipo ficou arbitrária (issue rclcpp#2532, aberta).</span></li>
+      <li><span class="pill warn">superado</span><span>A RTA em si é pessimista. Trabalhos posteriores obtêm limites até ~80× menores e analisam outros executores.</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Linha do tempo dos trabalhos</h2>
+    <ol class="timeline">
+
+      <li class="entry">
+        <span class="year">2019</span>
+        <div class="card">
+          <span class="venue">ECRTS 2019 · artigo do seminário</span>
+          <h3>Casini, Blaß, Lütkebohle, Brandenburg: RTA de cadeias ROS 2 sob reservas</h3>
+          <p class="ref">LIPIcs vol. 133, 6:1–6:23. DOI <a href="https://doi.org/10.4230/LIPIcs.ECRTS.2019.6">10.4230/LIPIcs.ECRTS.2019.6</a></p>
+          <dl class="facts">
+            <dt>Modelo</dt><dd>ROS 2 Crystal, executor single-threaded, polling points, timers privilegiados, prioridade = tipo e depois ordem de registro.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="entry">
+        <span class="year">2020</span>
+        <div class="card">
+          <span class="venue">IEEE RTSS 2020</span>
+          <h3>Tang et al.: Response Time Analysis and Priority Assignment of Processing Chains on ROS2 Executors</h3>
+          <p class="ref">Y. Tang, Z. Feng, N. Guan, X. Jiang, M. Lv, Q. Deng, W. Yi. pp. 231–243. DOI <a href="https://doi.org/10.1109/RTSS49844.2020.00030">10.1109/RTSS49844.2020.00030</a></p>
+          <dl class="facts">
+            <dt>Problema</dt><dd>Limites mais justos e uma forma de escolher prioridades para as cadeias.</dd>
+            <dt>Contribuição</dt><dd>Mostra que o tempo de resposta de uma cadeia depende essencialmente do seu último callback e dá regras simples de atribuição de prioridade.</dd>
+            <dt>Vs. 2019</dt><dd>Mantém o modelo de Casini e usa a ordem de registro como ferramenta de projeto.</dd>
+            <dt>Limitação</dt><dd>Executor single-threaded e semântica antiga dos timers. A ideia de controlar a prioridade pela ordem de registro deixa de funcionar no Jazzy.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="entry">
+        <span class="year">2021</span>
+        <div class="card">
+          <span class="venue">IEEE RTSS 2021 · mesmo grupo do artigo</span>
+          <h3>Blaß, Casini, Bozhko, Brandenburg: A ROS 2 Response-Time Analysis Exploiting Starvation Freedom and Execution-Time Variance</h3>
+          <p class="ref">pp. 41–53. DOI 10.1109/RTSS52674.2021.00016. <a href="https://pure.mpg.de/rest/items/item_3371373_3/component/file_3371374/content">PDF</a></p>
+          <dl class="facts">
+            <dt>Problema</dt><dd>A análise de 2019 usa um WCET único por callback e ignora que o executor nunca deixa uma callback sem executar (starvation freedom).</dd>
+            <dt>Contribuição</dt><dd>Curvas de tempo de execução no lugar do WCET, um modelo de ativação menos pessimista e uma RTA que explora o "uma instância por janela". No estudo de caso (Navigation 2 num Turtlebot 3), os limites caem até ~80×.</dd>
+            <dt>Vs. 2019</dt><dd class="key">Registra a mudança dos timers:<blockquote>"In versions up to ROS 2 'Dashing,' timers are privileged but all other classes are polled. In later versions, timers are polled callbacks as well."</blockquote>O modelo passa a separar callbacks com polling e callbacks privilegiadas.</dd>
+            <dt>Limitação</dt><dd>Ainda é single-threaded e exige medir curvas de execução.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="entry">
+        <span class="year">2021</span>
+        <div class="card">
+          <span class="venue">IEEE RTAS 2021</span>
+          <h3>Choi, Xiang, Kim: PiCAS, Priority-Driven Chain-Aware Scheduling for ROS2</h3>
+          <p class="ref">pp. 251–263. DOI <a href="https://doi.org/10.1109/RTAS52030.2021.00028">10.1109/RTAS52030.2021.00028</a> · código: <a href="https://github.com/rtenlab/ros2-picas">rtenlab/ros2-picas</a></p>
+          <dl class="facts">
+            <dt>Problema</dt><dd>O executor padrão é "justo" e não deixa priorizar a cadeia crítica.</dd>
+            <dt>Contribuição</dt><dd>Um executor modificado que respeita a prioridade das cadeias, distribui nós e executores entre os núcleos e traz análise de latência fim a fim.</dd>
+            <dt>Vs. 2019</dt><dd>Em vez de analisar o executor como ele é, troca a política de escalonamento.</dd>
+            <dt>Limitação</dt><dd>Exige modificar o <code>rclcpp</code>.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="entry">
+        <span class="year">2022</span>
+        <div class="card">
+          <span class="venue">IEEE RTSS 2022</span>
+          <h3>Teper, Günzel, Ueter, von der Brüggen, Chen: End-To-End Timing Analysis in ROS2</h3>
+          <p class="ref">pp. 53–65. DOI 10.1109/RTSS55097.2022.00015. <a href="https://daes.cs.tu-dortmund.de/storages/daes-cs/r/Bilder/Beschaeftigte/M._Sc._Mario_Guenzel/publications/teper22rtss_ros2.pdf">Preprint</a></p>
+          <dl class="facts">
+            <dt>Problema</dt><dd>O tempo de resposta não diz quanto tempo um dado leva para atravessar a cadeia.</dd>
+            <dt>Contribuição</dt><dd>Limites para o tempo máximo de reação e a idade máxima dos dados (data age), além de um método de medição online.</dd>
+            <dt>Vs. 2019</dt><dd>Modela o ROS 2 Foxy, com timers sujeitos a polling points, e troca a métrica (de tempo de resposta para semântica fim a fim).</dd>
+            <dt>Limitação</dt><dd>Um executor single-threaded numa só ECU. Estendido para vários executores em Teper et al., RTAS 2024.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="entry">
+        <span class="year">2023</span>
+        <div class="card">
+          <span class="venue">IEEE RTAS 2023</span>
+          <h3>Sobhani, Choi, Kim: Timing Analysis and Priority-driven Enhancements of ROS 2 Multi-threaded Executors</h3>
+          <p class="ref">pp. 106–118. DOI <a href="https://doi.org/10.1109/RTAS58335.2023.00016">10.1109/RTAS58335.2023.00016</a> · <a href="https://arxiv.org/abs/2408.08440">arXiv 2408.08440</a></p>
+          <dl class="facts">
+            <dt>Problema</dt><dd>Até então só o executor single-threaded tinha análise.</dd>
+            <dt>Contribuição</dt><dd>Primeira RTA para o MultiThreadedExecutor, com callback groups. Mostra que grupos mutuamente exclusivos podem gerar limites infinitos e propõe uma versão com prioridades.</dd>
+            <dt>Vs. 2019</dt><dd>Generaliza o readySet e o polling point para várias threads.</dd>
+            <dt>Atenção</dt><dd>Uma nota de rodapé diz que os timers entram no readySet logo após a liberação, o que conflita com Blaß 2021 e Dust 2023. Vale citar como ponto em aberto.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="entry">
+        <span class="year">2023</span>
+        <div class="card">
+          <span class="venue">IEEE ETFA 2023</span>
+          <h3>Dust et al.: Experimental Evaluation of Callback Behavior in ROS 2 Executors</h3>
+          <p class="ref">DOI 10.1109/ETFA54631.2023.10275668. <a href="https://www.es.mdu.se/pdf_publications/6796.pdf">PDF</a></p>
+          <dl class="facts">
+            <dt>Contribuição</dt><dd>Mostra com experimentos duas gerações de executor: até o Dashing vale o modelo de Casini; do Eloquent ao Humble os timers entram no ready set e podem ficar bloqueados pela janela em andamento.</dd>
+            <dt>Para nós</dt><dd>É o trabalho mais parecido com a nossa demo, e nosso experimento no Jazzy é o próximo passo dessa comparação.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="entry">
+        <span class="year">2024</span>
+        <div class="card">
+          <span class="venue">GitHub · ros2/rclcpp</span>
+          <h3>Issue #2532: "Executor callbacks are no longer in a predictable order"</h3>
+          <p class="ref">Aberta em 14 maio 2024, ainda aberta. <a href="https://github.com/ros2/rclcpp/issues/2532">github.com/ros2/rclcpp/issues/2532</a></p>
+          <dl class="facts">
+            <dt>Conteúdo</dt><dd>Quem abriu rodou o código dos próprios autores do artigo (boschresearch/ros2_response_time_analysis) no Jazzy. Do Eloquent ao Iron as callbacks seguiam a ordem de registro; no Jazzy a ordem ficou arbitrária, inclusive a dos timers.</dd>
+            <dt>Para nós</dt><dd>Confirma de forma independente o que vimos na demo.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="entry">
+        <span class="year">2024–25</span>
+        <div class="card">
+          <span class="venue">IEEE TCAD 2024 · IEEE RTAS 2025</span>
+          <h3>Teper et al.: starvation no MultiThreadedExecutor e escalonamento clássico no EventsExecutor</h3>
+          <p class="ref">"Thread Carefully: Preventing Starvation in the ROS 2 Multi-Threaded Executor", TCAD 43(11), DOI 10.1109/TCAD.2024.3446865 · "Reconciling ROS 2 with Classical Real-Time Scheduling of Periodic Tasks", RTAS 2025, pp. 177–189, DOI 10.1109/RTAS65571.2025.00027 (<a href="https://arxiv.org/abs/2408.03696">arXiv 2408.03696</a>)</p>
+          <dl class="facts">
+            <dt>Contribuição</dt><dd>Com uma fila de prioridade no EventsExecutor, os resultados clássicos da aula (RM, EDF, RTA) passam a valer para ROS 2.</dd>
+          </dl>
+        </div>
+      </li>
+
+      <li class="entry">
+        <span class="year">2026</span>
+        <div class="card">
+          <span class="venue">LITES vol. 11(1) · survey</span>
+          <h3>Casini, Chen, Li, Reghenzani, Teper: A Survey of Real-Time Support, Analysis, and Advancements in ROS 2</h3>
+          <p class="ref">Artigo 1, 2026. DOI <a href="https://doi.org/10.4230/LITES.11.1.1">10.4230/LITES.11.1.1</a></p>
+          <dl class="facts">
+            <dt>Para nós</dt><dd>Melhor referência única para o slide de situação atual. Confirma a mudança dos timers depois do Dashing e cita a discussão sobre a ordem no Jazzy.</dd>
+          </dl>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Mudanças no executor do <code>rclcpp</code></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Versão</th><th>Mudança</th><th>Fonte</th></tr></thead>
+        <tbody>
+          <tr><td>Crystal (2018)</td><td>Modelo analisado no artigo: timers privilegiados, ordem de registro.</td><td>Casini 2019</td></tr>
+          <tr><td>Eloquent (2019)</td><td>Timers passam a ser amostrados no polling point, como as outras callbacks.</td><td>Blaß 2021, Dust 2023</td></tr>
+          <tr><td>Iron (2023)</td><td>Entram o <code>EventsExecutor</code> experimental (fila de eventos, FIFO) e as novas estruturas de coleta de entidades (PR #2143).</td><td>CHANGELOG do rclcpp</td></tr>
+          <tr><td>Jazzy (2024)</td><td>A ordem dentro de cada tipo deixa de seguir o registro (<code>std::unordered_map</code>).</td><td>Issue #2532 e código</td></tr>
+          <tr><td>Kilted / 2025</td><td><code>StaticSingleThreadedExecutor</code> descontinuado (PR #2598) e depois removido (PR #2835).</td><td>PRs do rclcpp</td></tr>
+          <tr><td>Lyrical / 2026</td><td>Entra o <code>EventsCBGExecutor</code>, por eventos e com callback groups, também levado ao Jazzy e ao Kilted. O <code>EventsExecutor</code> experimental é descontinuado no Rolling (PR #3192). Há uma proposta, ainda em discussão, de descontinuar os executores por polling.</td><td>CHANGELOG, Discourse</td></tr>
+          <tr class="ours"><td>Jazzy, nossa demo</td><td>Confirmamos: polling points e uma instância por janela continuam; timers esperam a janela; ordem invertida (L M H); EventsExecutor em ordem de chegada.</td><td>Nosso experimento</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Pontos para a crítica no seminário</h2>
+    <ul class="concl">
+      <li><strong>O modelo dependia de detalhes de implementação.</strong>A análise usou a ordem de registro e o tratamento dos timers, que não eram garantias da API. Os dois mudaram em poucas versões.</li>
+      <li><strong>Pessimismo grande.</strong>Os próprios autores mostraram depois (RTSS 2021) que dava para reduzir os limites em até ~80×.</li>
+      <li><strong>WCET apenas observado.</strong>O estudo de caso usa tempos máximos medidos, sem análise de WCET (ligação com as aulas 3 e 4).</li>
+      <li><strong>Escopo estreito.</strong>Só o executor single-threaded, sem callback groups, sem multicore e sem a rede modelada em detalhe. Os trabalhos de 2023 a 2025 cobrem essas lacunas.</li>
+      <li><strong>A contribuição que ficou.</strong>Foi o primeiro modelo formal do executor e mostrou que a prioridade não protege as callbacks com polling. Isso abriu a linha de pesquisa e motivou executores com prioridade de verdade (PiCAS, EventsExecutor com fila de prioridade).</li>
+    </ul>
+  </section>
+
+  <section class="unverified">
+    <h2>Não verificado</h2>
+    <p>Confiram antes de pôr nos slides:</p>
+    <ul>
+      <li>Os DOIs de Blaß 2021, Teper 2022, Dust 2023, Teper 2024/2025 e do TCAD vieram da bibliografia do survey e não foram conferidos no IEEE Xplore.</li>
+      <li>A página oficial "Concepts → Executors" do docs.ros.org bloqueou o acesso automático.</li>
+      <li>A divergência entre Sobhani 2023 e Blaß 2021 sobre os timers continua em aberto.</li>
+    </ul>
+  </section>
+
+  <footer>
+    Levantamento feito em 17 nov. 2026 a partir das páginas dos artigos, do arXiv, do repositório ros2/rclcpp e do survey de 2026. Página complementar: <em>Executor ROS 2 no Jazzy</em> (a causa da ordem invertida no código).
+  </footer>
+</main>

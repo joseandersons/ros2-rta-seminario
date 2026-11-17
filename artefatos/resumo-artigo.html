@@ -1,0 +1,239 @@
+<title>Resumo: RTA de Cadeias ROS 2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@500;600&display=swap">
+<style>
+/* Layout: guia de leitura de uma coluna que segue as seções do artigo; sumário no topo, equações em blocos de fórmula, glossário no fim */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --fg: #1c2330;
+  --muted: #5a6475;
+  --line: #dde1e8;
+  --accent: #0b6e7f;
+  --amber: #a8651a;
+  --code-bg: #eef1f5;
+  --font-display: "Space Grotesk", "IBM Plex Sans", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa4b4; --line: #2c3442;
+    --accent: #4fb3c4; --amber: #e8a65c; --code-bg: #202733; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161d; --surface: #1a2029; --fg: #e4e8ef; --muted: #9aa4b4; --line: #2c3442;
+  --accent: #4fb3c4; --amber: #e8a65c; --code-bg: #202733; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 16px/1.65 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 40px 64px;
+}
+main { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+header { display: flex; flex-direction: column; gap: 10px; }
+.eyebrow { font: 500 12px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { font: 600 clamp(28px, 5vw, 38px)/1.15 var(--font-display); margin: 0; text-wrap: balance; }
+h2 { font: 600 22px/1.25 var(--font-display); margin: 0 0 12px; text-wrap: balance; display: flex; gap: 12px; align-items: baseline; }
+h2 .sec { font: 500 13px var(--font-mono); color: var(--accent); min-width: 28px; }
+h3 { font: 600 16px/1.35 var(--font-body); margin: 18px 0 6px; }
+p { margin: 0 0 12px; max-width: 68ch; }
+ul, ol { margin: 0 0 12px; padding-left: 22px; max-width: 66ch; }
+li { margin-bottom: 6px; }
+a { color: var(--accent); }
+code, .m { font: 14px var(--font-mono); background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+section { min-width: 0; }
+.lead { font-size: 18px; color: var(--muted); }
+.ref { font-size: 14px; color: var(--muted); }
+.abstract { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; }
+.abstract p:last-child { margin-bottom: 0; }
+nav ol { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px 20px; font-size: 15px; }
+nav li { margin: 0; }
+nav .n { font-family: var(--font-mono); color: var(--muted); margin-right: 6px; }
+.eq { margin: 10px 0 14px; background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; overflow-x: auto; font: 14px/1.6 var(--font-mono); white-space: pre; }
+.eq-label { font: 500 12px var(--font-mono); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; margin-bottom: -6px; }
+.key { border-left: 3px solid var(--amber); padding: 2px 0 2px 14px; margin: 8px 0 14px; }
+.key p:last-child { margin: 0; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); margin-bottom: 12px; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 12px var(--font-mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+tr:last-child td { border-bottom: 0; }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 600; }
+dl.gloss { display: grid; grid-template-columns: 170px 1fr; gap: 8px 16px; margin: 0; }
+dl.gloss dt { font-weight: 600; }
+dl.gloss dd { margin: 0; }
+footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; }
+@media (max-width: 560px) { dl.gloss { grid-template-columns: 1fr; gap: 0; } dl.gloss dd { margin-bottom: 10px; } }
+</style>
+
+<main>
+  <header>
+    <span class="eyebrow">Resumo em português · Seminário STR</span>
+    <h1>Response-Time Analysis of ROS 2 Processing Chains Under Reservation-Based Scheduling</h1>
+    <p class="ref">Daniel Casini, Tobias Blaß, Ingo Lütkebohle, Björn B. Brandenburg. 31st Euromicro Conference on Real-Time Systems (ECRTS 2019), LIPIcs vol. 133, 6:1–6:23. DOI <a href="https://doi.org/10.4230/LIPIcs.ECRTS.2019.6">10.4230/LIPIcs.ECRTS.2019.6</a>. Código: <a href="https://github.com/boschresearch/ros2_response_time_analysis">boschresearch/ros2_response_time_analysis</a></p>
+  </header>
+
+  <section class="abstract">
+    <p><strong>Em uma frase:</strong> o artigo descreve, pela primeira vez, como o executor do ROS 2 escalona as callbacks e, a partir disso, cria uma análise que limita o pior tempo de resposta fim a fim de cadeias de processamento (sensor → controle → atuador), supondo que cada executor roda dentro de uma reserva de CPU.</p>
+    <p>O trabalho tem três objetivos: dar aos engenheiros de robótica uma análise prática, expor as escolhas de implementação do ROS 2 do ponto de vista de tempo real e propor um modelo de escalonamento realista. A versão estudada é o ROS 2 “Crystal Clemmys”, de dezembro de 2018.</p>
+  </section>
+
+  <nav aria-label="Sumário">
+    <ol>
+      <li><a href="#s1"><span class="n">1</span>Introdução</a></li>
+      <li><a href="#s2"><span class="n">2</span>Fundamentos</a></li>
+      <li><a href="#s3"><span class="n">3</span>O executor do ROS 2</a></li>
+      <li><a href="#s4"><span class="n">4</span>Modelo do sistema</a></li>
+      <li><a href="#s5"><span class="n">5</span>Análise de tempo de resposta</a></li>
+      <li><a href="#s6"><span class="n">6</span>Estudo de caso move_base</a></li>
+      <li><a href="#s7"><span class="n">7</span>Trabalhos relacionados</a></li>
+      <li><a href="#s8"><span class="n">8</span>Limitações e conclusão</a></li>
+      <li><a href="#glossario"><span class="n">—</span>Glossário</a></li>
+    </ol>
+  </nav>
+
+  <section id="s1">
+    <h2><span class="sec">§1</span>Introdução: por que o problema é difícil</h2>
+    <p>O ROS (Robot Operating System) é o framework mais usado para construir robôs em Linux. O ROS 2 é uma reescrita completa, e um dos objetivos declarados é suportar caminhos de controle com requisitos de tempo real. Para isso, é preciso prever a latência fim a fim de uma cadeia de processamento, que pode atravessar vários componentes, núcleos e até computadores.</p>
+    <p>A literatura sobre latência fim a fim é extensa, mas costuma assumir modelos de escalonamento idealizados. O ROS não segue nenhum deles. Os autores apontam três dificuldades:</p>
+    <ul>
+      <li><strong>O middleware escalona.</strong> O ROS multiplexa várias callbacks numa mesma thread com uma política própria, por cima do escalonador do sistema operacional. O efeito no tempo de execução pode ser tão grande quanto o do próprio Linux.</li>
+      <li><strong>Modularidade.</strong> O ROS incentiva reutilizar componentes de terceiros, o que esconde o comportamento temporal do sistema como um todo.</li>
+      <li><strong>Projeto orientado a eventos.</strong> Callbacks publicam mensagens que ativam outras callbacks, criando cadeias longas e dependências de dados.</li>
+    </ul>
+    <p>Sem análise, o desenvolvedor só consegue medir o tempo depois de implementar e implantar o sistema, o que limita muito a exploração de alternativas de projeto.</p>
+  </section>
+
+  <section id="s2">
+    <h2><span class="sec">§2</span>Fundamentos</h2>
+    <h3>ROS 2</h3>
+    <p>Aplicações são compostas de <strong>nós</strong> que se comunicam por <strong>publish-subscribe</strong>: um nó publica mensagens num <strong>tópico</strong>, e cada nó assinante reage executando uma <strong>callback</strong>. Também existem <strong>services</strong> (chamadas remotas não bloqueantes, com uma callback de <strong>client</strong> para a resposta) e <strong>timers</strong>. A pilha tem camadas: a biblioteca da linguagem (<code>rclcpp</code> para C++), a biblioteca comum <code>rcl</code>, a interface <code>rmw</code> e uma implementação do padrão DDS por baixo. O artigo foca em C++, a escolha mais provável para componentes críticos.</p>
+    <p>Os nós são mapeados para processos, e cada processo roda <strong>executores</strong>, que recebem as mensagens e chamam as callbacks. O ROS traz um executor single-threaded e um multi-threaded.</p>
+    <h3>Reservas de recurso</h3>
+    <p>Uma <strong>reserva</strong> r<sub>i</sub> tem orçamento Q<sub>i</sub> e período P<sub>i</sub> e garante Q<sub>i</sub> unidades de execução a cada P<sub>i</sub>. O artigo não fixa um algoritmo: exige só o modelo de recurso periódico e uma <strong>supply bound function</strong> <span class="m">sbf(Δ)</span> conhecida, o mínimo de serviço que a reserva entrega em qualquer intervalo de tamanho Δ. No Linux, isso existe como <code>SCHED_DEADLINE</code>, que implementa o Constant Bandwidth Server (CBS). Uma thread sozinha num núcleo dedicado, com a maior prioridade de <code>SCHED_FIFO</code>, equivale a <span class="m">sbf(Δ) = Δ</span>.</p>
+    <h3>Compositional Performance Analysis (CPA)</h3>
+    <p>O CPA modela o sistema como recursos que fornecem tempo e tarefas encadeadas que o consomem. A primeira tarefa de cada cadeia é ativada por uma <strong>curva de chegada</strong> η(Δ), o máximo de eventos numa janela Δ. As tarefas seguintes herdam essa curva com um <strong>jitter</strong> igual ao atraso dos predecessores. Como o tempo de resposta depende do jitter e o jitter depende do tempo de resposta, a análise começa com jitter zero e itera até convergir. A latência da cadeia é a soma dos tempos de resposta.</p>
+  </section>
+
+  <section id="s3">
+    <h2><span class="sec">§3</span>O executor do ROS 2</h2>
+    <p>Com base no código-fonte, os autores dão a primeira descrição completa do escalonamento do executor single-threaded:</p>
+    <ul>
+      <li>Há quatro categorias de callback: <strong>timers</strong>, <strong>subscribers</strong>, <strong>services</strong> e <strong>clients</strong>.</li>
+      <li>O executor é <strong>não preemptivo</strong>: cada callback roda até o fim.</li>
+      <li>Quando fica ocioso, ele atualiza o <strong>readySet</strong>, uma cópia do conjunto de callbacks não-timer prontas. Esse é o único momento em que ele consulta a camada de comunicação, chamado de <strong>polling point</strong>. O intervalo entre dois polling points é uma <strong>janela de processamento</strong>.</li>
+      <li>Para escolher a próxima callback, ele verifica primeiro os timers vencidos, consultando o estado atual deles e não o readySet. Depois percorre o readySet na ordem subscribers, services, clients. Dentro de cada categoria vale a ordem de registro. O par (tipo, ordem de registro) é uma prioridade única para cada callback.</li>
+    </ul>
+    <div class="key">
+      <p><strong>Duas consequências incomuns.</strong> Mensagens que chegam durante uma janela só são vistas no próximo polling point, então callbacks de prioridade menor podem bloquear as de prioridade maior (inversão de prioridade). E, como o readySet é um conjunto, cada callback roda no máximo <strong>uma vez por janela</strong>, mesmo com várias mensagens na fila.</p>
+    </div>
+    <h3>Validação (Fig. 3)</h3>
+    <p>Para confirmar o modelo, os autores criaram um nó com três tópicos (H, M, L), três services (SH, SM, SL) e timers, todos com callbacks de 500 ms. Enviaram a sequência <span class="m">L M H SH SL L M H SH SL</span>, criaram timers em 200 ms e 2300 ms e, em 1500 ms, enviaram <span class="m">SM SM H</span>. O trace mostrou uma instância por callback por janela, SM sendo pulado apesar de ter chegado antes (prova dos polling points) e os timers t2 e t3 executando na primeira janela, ou seja, sem esperar o polling point.</p>
+  </section>
+
+  <section id="s4">
+    <h2><span class="sec">§4</span>Modelo do sistema</h2>
+    <ul>
+      <li>O sistema é um <strong>DAG</strong> fixo de callbacks. Uma aresta (c<sub>i</sub>, c<sub>j</sub>) significa que cada execução de c<sub>i</sub> ativa no máximo uma instância de c<sub>j</sub>.</li>
+      <li>Cada callback tem WCET e<sub>i</sub> e prioridade única. O tempo é discreto.</li>
+      <li>Uma <strong>cadeia</strong> é um caminho no grafo a partir de uma fonte. Fontes têm curva de chegada externa; as demais recebem uma curva derivada. Uma callback com vários predecessores é ativada por qualquer um deles.</li>
+      <li>Cada executor é uma thread dentro de uma reserva exclusiva, e as reservas ficam fixas em processadores. Assume-se que todas as reservas são escalonáveis.</li>
+      <li>Entre duas reservas, a rede e o DDS são resumidos num atraso máximo δ<sub>i,j</sub>; dentro da mesma reserva, esse atraso é desprezado.</li>
+      <li><strong>Event sources</strong> são threads externas ao ROS (por exemplo, tratando interrupções de sensores) que publicam em tópicos, cada uma na sua própria reserva.</li>
+    </ul>
+  </section>
+
+  <section id="s5">
+    <h2><span class="sec">§5</span>Análise de tempo de resposta</h2>
+    <p>A análise segue o CPA: calcula um limite para cada callback e soma ao longo da cadeia. Em todos os lemas abaixo, A é o instante de liberação dentro do busy period, rbf<sub>i</sub>(Δ) = η<sub>i</sub>(Δ)·e<sub>i</sub> é a demanda de c<sub>i</sub> e RBF(C, Δ) soma a demanda de um conjunto C.</p>
+
+    <h3>5.1 Cadeias e curvas de ativação</h3>
+    <p>A curva de ativação de uma subcadeia é a curva da anterior deslocada pelo tempo de resposta e pelo atraso de comunicação. Com vários predecessores, as curvas são somadas, porque cada mensagem gera uma instância. O artigo chama de <strong>subcadeia</strong> um trecho consecutivo da cadeia dentro de uma mesma reserva.</p>
+
+    <h3>5.2 Callbacks individuais</h3>
+    <p><strong>Lema 1 (event sources).</strong> Como estão sozinhas na reserva, só sofrem autointerferência: R<sub>i</sub>(A) é o menor valor com <span class="m">sbf(A+R) = rbf<sub>i</sub>(A+1)</span>.</p>
+    <p><strong>Lema 2 (bloqueio).</strong> Por ser não preemptivo, um timer espera no máximo a maior callback de prioridade menor: <span class="m">B<sub>i</sub> = max{e<sub>j</sub> | c<sub>j</sub> ∈ lp(c<sub>i</sub>)}</span>.</p>
+    <p class="eq-label">Lema 3 · timers</p>
+    <div class="eq">sbf(A + Rᵢ) = rbfᵢ(A + 1) + RBF(hp(cᵢ), A + Rᵢ − eᵢ + 1) + Bᵢ</div>
+    <p>Equivale ao escalonamento de prioridade fixa não preemptivo dentro de uma reserva. Só timers têm prioridade maior que um timer, e a interferência para quando a callback começa (por isso o <span class="m">− eᵢ</span>).</p>
+    <p class="eq-label">Lemas 4 e 5 · callbacks com polling point</p>
+    <div class="eq">sbf(A + Rᵢ) = rbfᵢ(A + 1) + RBF(Cₖ \ {cᵢ}, A + Rᵢ − eᵢ + 1)      (Eq. 6)</div>
+    <p>O Lema 4 tem um termo X, a distância até o último polling point antes de a callback começar. O Lema 5 mostra que o pior caso é X = 0: a callback começa logo depois de um polling point. Com isso, as callbacks de prioridade maior e menor interferem igualmente.</p>
+    <div class="key">
+      <p><strong>Resultado central.</strong> Por causa dos polling points, a atribuição de prioridade é inútil para limitar o tempo de resposta de callbacks não-timer: todas as outras callbacks da reserva podem interferir. Só os timers têm o comportamento de prioridade fixa não preemptiva.</p>
+    </div>
+
+    <h3>5.3 Busca eficiente</h3>
+    <p><strong>Lema 6</strong> limita o tamanho do busy period L, o que torna finito o conjunto de valores de A a testar. <strong>Lema 7</strong> mostra que só importam os A em que rbf<sub>i</sub> muda de degrau, mais o zero.</p>
+
+    <h3>5.4 Subcadeias</h3>
+    <p class="eq-label">Lema 8 · subcadeia com 2 ou mais callbacks</p>
+    <div class="eq">sbf(Rₓ,ᵧ) = RBF(Γₖ, Rₓ,ᵧ − e_último + 1)</div>
+    <p>A subcadeia é analisada como um bloco cujo WCET é a soma dos WCETs. Assim, as rajadas de interferência são contadas uma vez por subcadeia, e não uma vez por callback (o problema do <em>pay burst only once</em>). Também aqui a prioridade não ajuda, porque a última callback da subcadeia depende de polling point.</p>
+  </section>
+
+  <section id="s6">
+    <h2><span class="sec">§6</span>Estudo de caso: move_base</h2>
+    <p>O <code>move_base</code> é o núcleo da navegação de robôs com rodas no ROS: o planejador global encontra um caminho no mapa e o planejador local controla a velocidade para segui-lo desviando de obstáculos. Como ele ainda não existia para ROS 2, os autores modelaram a versão do ROS 1 como se rodasse no ROS 2, com taxas de sensores e tempos máximos observados num estudo de caso interno da Bosch. A análise foi prototipada no framework pyCPA.</p>
+    <p>A cadeia analisada vai da odometria ao comando de velocidade das rodas, que determina quanto tempo o robô leva para reagir a um obstáculo. O planejador global chega a 200 ms, mais de dez vezes o local, mas não é crítico; por isso fica numa reserva separada da do planejador local. Foram comparadas duas versões: por tempo (planejador local a 12,5 Hz e global a 1 Hz) e por eventos.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Resultado</th><th>Valor</th><th>Interpretação</th></tr></thead>
+        <tbody>
+          <tr><td>Versão por tempo vs. por eventos</td><td class="num">+80 ms</td><td>A versão por tempo paga um período de amostragem a mais (12,5 Hz).</td></tr>
+          <tr><td>Sem a análise de subcadeia (Lema 8)</td><td class="num">4×</td><td>A autointerferência da cadeia é contada quatro vezes.</td></tr>
+          <tr><td>Jitter nos sensores (orçamento local de 45%)</td><td class="num">40 ms</td><td>Abaixo disso a versão por eventos é melhor; acima, sofre com rajadas. A latência sobe em degraus a cada ~20 ms de jitter.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>A conclusão dos autores: sem escrever uma linha de código ROS, foi possível comparar dois projetos e dimensionar a reserva. Uma ferramenta automática com essa análise permitiria tratar o tempo de resposta como restrição de projeto, e não só como algo medido depois.</p>
+  </section>
+
+  <section id="s7">
+    <h2><span class="sec">§7</span>Trabalhos relacionados</h2>
+    <p>Os autores afirmam ser o primeiro trabalho a modelar o ROS do ponto de vista de tempo real e a propor uma RTA para cadeias no ROS 2. Trabalhos anteriores eram sobretudo medições e melhorias para o ROS 1, comparações de desempenho entre ROS 1 e ROS 2 com diferentes DDS, e avaliações do ROS 2 com Linux PREEMPT_RT. Sobre cadeias em sistemas distribuídos, o artigo situa a proposta entre as abordagens CPA (com curvas de chegada e propagação de eventos) e as holísticas (Tindell e Clark, com refinamentos por offsets). Fora do ROS, só o OpenMP tinha recebido análise específica de framework.</p>
+  </section>
+
+  <section id="s8">
+    <h2><span class="sec">§8</span>Limitações, extensões e conclusão</h2>
+    <p>Os próprios autores listam o que ficou de fora:</p>
+    <ul>
+      <li>Só o executor <strong>single-threaded</strong>. O multi-threaded e executores customizados ficam para o futuro.</li>
+      <li><strong>Callback groups</strong> mutuamente exclusivos, que criam bloqueio entre callbacks, não são tratados.</li>
+      <li>O grafo é <strong>fixo</strong>: não cobre mudanças de modo, quando nós entram e saem em tempo de execução.</li>
+      <li>Rede e DDS são uma constante δ; integrar uma análise de rede reduziria o pessimismo.</li>
+      <li>Callbacks do tipo <strong>waitable</strong>, recém-introduzidas, não são modeladas.</li>
+      <li>Cada callback ativa as sucessoras no máximo uma vez por execução.</li>
+      <li>Correlações entre eventos de cadeias que passam várias vezes pela mesma reserva poderiam reduzir ainda mais o pessimismo.</li>
+    </ul>
+    <p>A conclusão: este é o primeiro modelo de escalonamento abrangente do ROS 2 e um primeiro passo para uma ferramenta automática que permita a usuários sem formação em tempo real verificar a segurança temporal de suas aplicações.</p>
+  </section>
+
+  <section id="glossario">
+    <h2><span class="sec">—</span>Glossário</h2>
+    <dl class="gloss">
+      <dt>Callback</dt><dd>Função executada pelo ROS quando chega uma mensagem, um request, uma resposta ou quando um timer vence.</dd>
+      <dt>Executor</dt><dd>Thread do ROS que escolhe e executa as callbacks prontas.</dd>
+      <dt>readySet</dt><dd>Cópia do conjunto de callbacks não-timer prontas, atualizada só nos polling points.</dd>
+      <dt>Polling point</dt><dd>Momento em que o executor ocioso consulta a camada de comunicação e atualiza o readySet.</dd>
+      <dt>Janela de processamento</dt><dd>Intervalo entre dois polling points consecutivos.</dd>
+      <dt>Reserva</dt><dd>Mecanismo do SO que garante Q unidades de CPU a cada período P (no Linux, SCHED_DEADLINE).</dd>
+      <dt>sbf(Δ)</dt><dd>Supply bound function: serviço mínimo que a reserva entrega em qualquer intervalo de tamanho Δ.</dd>
+      <dt>rbf / RBF</dt><dd>Request bound function: demanda máxima de uma callback (ou de um conjunto) numa janela.</dd>
+      <dt>η(Δ)</dt><dd>Curva de chegada: número máximo de ativações numa janela de tamanho Δ.</dd>
+      <dt>Busy period</dt><dd>Intervalo em que a reserva fica continuamente ocupada com trabalho que afeta a callback analisada.</dd>
+      <dt>CPA</dt><dd>Compositional Performance Analysis: analisa cada recurso separadamente e propaga as curvas de ativação pela cadeia.</dd>
+      <dt>Pay burst only once</dt><dd>Problema de contar a mesma rajada de interferência várias vezes ao somar tempos de resposta.</dd>
+    </dl>
+  </section>
+
+  <footer>
+    Resumo feito a partir do texto do artigo para o seminário de Sistemas de Tempo Real (UFAL). Ele descreve o ROS 2 Crystal, de 2018; para o que mudou depois, veja as páginas “ROS 2 em tempo real depois de 2019” e “Executor ROS 2 no Jazzy”.
+  </footer>
+</main>

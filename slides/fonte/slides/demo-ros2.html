@@ -1,0 +1,15 @@
+<section id="demo-ros2" class="alt">
+<div class="head">
+<p class="eyebrow">Demo 2 · ROS 2 Jazzy ao vivo</p>
+<h2>O experimento da Fig. 3 no ROS 2 de hoje</h2>
+</div>
+<div class="row" style="align-items:start; gap:48px;">
+<img class="shot" src="/_blob/62bb22b8f951e8e78b19e15bf23672b0" alt="Diagrama de Gantt da execução no executor single-threaded do ROS 2 Jazzy: L, M e H rodam nessa ordem, SM chega em 1500 ms e só roda em 6500 ms, e os timers t2 e t3 vencem em 2300 ms mas só rodam a partir de 4000 ms" style="width:990px; height:540px;">
+<div class="stack grow" style="gap:28px;">
+<div class="stack" style="gap:6px;"><p class="pill ok">igual ao artigo</p><p class="small"><b>SM</b> chega em 1500 ms e só roda em 6500 ms: polling point.</p></div>
+<div class="stack" style="gap:6px;"><p class="pill bad">mudou</p><p class="small"><b>t2/t3</b> vencem em 2300 ms e esperam a janela acabar.</p></div>
+<div class="stack" style="gap:6px;"><p class="pill bad">mudou</p><p class="small">Ordem <b>L, M, H</b>: invertida em relação ao registro.</p></div>
+</div>
+</div>
+<aside>Rodar ao vivo no Ubuntu (WSL): bash ~/ros2-rta-seminario/demo/apresentar.sh single. Leva uns 10 segundos e o Gantt abre sozinho. Se algo falhar, este gráfico é o resultado já gravado. Cada callback ocupa a CPU por 500 ms; os triângulos são as chegadas. Os tempos variam um pouco a cada execução porque o WSL não é tempo real, mas os três pontos se repetem.</aside>
+</section>

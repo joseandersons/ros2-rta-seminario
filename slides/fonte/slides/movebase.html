@@ -1,0 +1,13 @@
+<section id="movebase" class="alt">
+<div class="head">
+<p class="eyebrow">Estudo de caso (Seção 6)</p>
+<h2>move_base: da odometria ao comando das rodas</h2>
+</div>
+<p class="lead">Planejador local (crítico) e global (até 200 ms) em reservas separadas, com dados de um caso real da Bosch. Duas versões: por tempo (12,5 Hz) e por eventos.</p>
+<div class="cols3">
+<div class="card cool"><p class="big">80 ms</p><p class="small">A versão por tempo paga um período de amostragem a mais que a por eventos.</p></div>
+<div class="card hot"><p class="big warn">40 ms</p><p class="small">Acima desse jitter nos sensores, a versão por eventos perde: chegam rajadas.</p></div>
+<div class="card"><p class="big" style="color:#14202B;">4×</p><p class="small">Interferência contada a mais sem a análise da cadeia inteira (Lema 8).</p></div>
+</div>
+<aside>O move_base é o núcleo da navegação de robôs com rodas no ROS. Como ele ainda não existia para ROS 2, os autores modelaram a versão do ROS 1 como se rodasse no ROS 2. Os resultados são todos analíticos, sem escrever código de robô. O ponto do estudo: dá para comparar projetos (por tempo ou por eventos, quanto orçamento dar à reserva) antes de implementar.</aside>
+</section>

@@ -1,0 +1,17 @@
+<section id="critica" class="dark">
+<div class="head">
+<p class="eyebrow">Olhar crítico</p>
+<h2>Premissas frágeis e limites da análise</h2>
+</div>
+<div class="cols">
+<div class="stack" style="gap:20px;">
+<div class="card"><h3>Modelo preso à implementação</h3><p class="small">Ordem de registro e timers privilegiados não eram garantia da API e caíram em poucas versões.</p></div>
+<div class="card"><h3>WCET apenas observado</h3><p class="small">O move_base usa tempos máximos medidos, sem análise de WCET.</p></div>
+</div>
+<div class="stack" style="gap:20px;">
+<div class="card"><h3>Pessimista</h3><p class="small">Toda callback interfere em toda callback. Os próprios autores reduziram os limites em até ~80× em 2021.</p></div>
+<div class="card"><h3>Escopo estreito, sem validação</h3><p class="small">Só single-threaded, sem cache, multicore ou rede detalhada; limites nunca comparados com medições.</p></div>
+</div>
+</div>
+<aside>Critério “olhar crítico”. O ponto mais forte é o primeiro: o modelo dependia de detalhes que o ROS 2 não garantia, e nossa demo mostra isso. O último ponto também é importante: o estudo de caso é todo analítico, modelando o move_base do ROS 1 como se rodasse no ROS 2, sem comparar o limite calculado com latências medidas num sistema real.</aside>
+</section>
