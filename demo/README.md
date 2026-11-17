@@ -41,7 +41,15 @@ Para mudar o exemplo, edite `example_system()`. A lista está em ordem de priori
    ```
 2. No Ubuntu, instale o ROS 2 Jazzy seguindo o guia oficial: https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html (pacote `ros-jazzy-ros-base` + `ros-dev-tools`).
 
-### Compilar e rodar
+### Atalho: tudo de uma vez
+
+O script [`setup_wsl.sh`](setup_wsl.sh) instala o ROS 2 Jazzy, clona o repositório em `~/ros2-rta-seminario`, compila e roda o experimento nos 3 executores. Os resultados (CSV, PNG e logs) ficam em `~/ros2-rta-seminario/demo/results/`. No Ubuntu:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/joseandersons/ros2-rta-seminario/main/demo/setup_wsl.sh -o setup_wsl.sh && bash setup_wsl.sh
+```
+
+### Compilar e rodar (passo a passo)
 
 No terminal do Ubuntu (a pasta do Windows aparece em `/mnt/c/...`):
 
