@@ -7,7 +7,10 @@ mensagem/timer chega e a linha tracejada cinza mostra quanto tempo cada
 uma ficou esperando o executor.
 
 Uso (o apresentar.sh já faz isso):
-    python3 live.py trace_single.csv
+    python3 live.py trace_single.csv [duração_ms]
+
+Funciona com o trace da nossa reprodução (H, M, L, SH...) e com o trace do
+código original dos autores (high, medium, low, srv_high..., timer0...).
 """
 import sys
 import time
@@ -19,7 +22,9 @@ from matplotlib.animation import FuncAnimation
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
 
-ORDER = ["t0", "t1", "t2", "t3", "H", "M", "L", "SH", "SM", "SL"]
+ORDER_NOSSO = ["t0", "t1", "t2", "t3", "H", "M", "L", "SH", "SM", "SL"]
+ORDER_AUTORES = ["timer0", "timer1", "timer2", "timer3", "high", "medium", "low",
+                 "srv_high", "srv_medium", "srv_low"]
 COLORS = {"t": "#d1495b", "S": "#00798c", "_": "#edae49"}
 XMAX = 9000  # ms; o experimento termina por volta de 8500 ms
 
@@ -27,7 +32,7 @@ XMAX = 9000  # ms; o experimento termina por volta de 8500 ms
 def color(name):
     if name.startswith("t"):
         return COLORS["t"]
-    if name.startswith("S"):
+    if name.startswith("S") or name.startswith("srv_"):
         return COLORS["S"]
     return COLORS["_"]
 
@@ -71,7 +76,11 @@ def main():
     if len(sys.argv) < 2:
         print(__doc__)
         sys.exit(1)
+    global XMAX
     tr = Trace(Path(sys.argv[1]))
+    if len(sys.argv) > 2:
+        XMAX = float(sys.argv[2])
+    ORDER = ORDER_AUTORES if "autores" in sys.argv[1] else ORDER_NOSSO
     y = {n: i for i, n in enumerate(reversed(ORDER))}
 
     plt.rcParams.update({"font.size": 14})

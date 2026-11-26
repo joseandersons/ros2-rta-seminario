@@ -15,6 +15,16 @@ O código foi feito para o ROS 2 Crystal (2018). Para compilar no Jazzy foram s�
 
 ## Como rodar (Ubuntu/WSL com ROS 2 Jazzy)
 
+**Ao vivo, com gráfico (para a apresentação):**
+
+```bash
+bash ~/ros2-rta-seminario/original/ao_vivo.sh
+```
+
+Compila o código dos autores, roda o experimento e abre uma janela que desenha as callbacks enquanto elas executam: o ▼ é a chegada, a linha tracejada é a espera e a barra cresce enquanto a callback roda. O código dos autores **não é alterado** para isso: o [`coletor.py`](coletor.py) só lê os logs que o próprio código deles já imprime (o nó registra "Received ..." e "Finished ..." com horário, e o script registra quando envia cada lote) e transforma em trace para a janela ([`demo/live.py`](../demo/live.py)). A primeira barra curta do `high` (300 ms) é a mensagem de "aquecimento" que o script dos autores manda antes da rajada.
+
+**Só a ordem, em texto:**
+
 ```bash
 bash rodar.sh 3     # compila em ~/orig_ws e roda o experimento 3 vezes
 ```
