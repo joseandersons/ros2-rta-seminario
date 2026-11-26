@@ -1,18 +1,18 @@
 <section id="achados" data-quem="José">
 <div class="head">
-<p class="eyebrow">Resultado do experimento da Fig. 3</p>
+<p class="eyebrow">Mesmo código dos autores, duas versões do ROS 2</p>
 <h2>O que mudou entre o Crystal (2018) e o Jazzy (2024)</h2>
 </div>
 <table>
-<tr><th style="width:34%;">Comportamento</th><th style="width:24%;">Artigo · Crystal</th><th style="width:30%;">Código dos autores · Jazzy</th><th style="width:12%;">Status</th></tr>
+<tr><th style="width:32%;">Comportamento</th><th style="width:25%;">Crystal (2018) · artigo</th><th style="width:31%;">Jazzy (2024) · nós rodamos</th><th style="width:12%;">Status</th></tr>
 <tr><td>Mensagem no meio da janela</td><td>Espera o polling point</td><td>Espera o polling point</td><td>igual</td></tr>
 <tr><td>Instâncias por janela</td><td>Uma por callback</td><td>Uma por callback</td><td>igual</td></tr>
 <tr><td>Ordem entre tipos</td><td>Timer, sub, service</td><td>Timer, sub, service</td><td>igual</td></tr>
 <tr class="hl"><td>Timers e o polling point</td><td>Não esperam</td><td>Esperam a janela</td><td>mudou</td></tr>
 <tr class="hl"><td>Ordem dentro do tipo</td><td>Ordem de registro</td><td>Varia (ex.: medium, low, high)</td><td>mudou</td></tr></table>
 <div class="stack" style="gap:10px;">
-<div class="row" style="gap:16px;"><p class="pill ok" style="flex:none;">confirmado</p><p class="small">Nossa <b>reprodução independente</b>, escrita do zero, deu o mesmo resultado.</p></div>
+<p class="small">Coluna do Crystal: resultado publicado no artigo (Fig. 3). Coluna do Jazzy: o mesmo código, rodado por nós no ROS 2 de hoje.</p>
 <p class="small">A ordem dentro do tipo varia entre execuções. A causa está no código do rclcpp: as callbacks ficam num <span class="mono">std::unordered_map</span>.</p>
 </div>
-<aside>Este é o slide que responde “o conteúdo continua válido?”. A essência do modelo continua, mas duas premissas caíram. O Lema 3 (timers privilegiados) não vale mais: os timers caem na Eq. 6, como as demais callbacks. E a prioridade por ordem de registro deixou de existir no Jazzy: os subscribers foram registrados como high, medium, low, mas rodaram medium, low, high ou low, medium, high, variando entre execuções. A comunidade registrou isso na issue ros2/rclcpp#2532, aberta por alguém que rodou o próprio código dos autores do artigo. Além do código dos autores (a demo), escrevemos uma reprodução independente do mesmo experimento (pasta demo/ do repositório), e ela deu o mesmo resultado.</aside>
+<aside>Este é o slide que responde “o conteúdo continua válido?”. É a comparação do mesmo código dos autores em duas versões do ROS 2: o resultado no Crystal é o que eles publicaram no artigo (Figura 3); o resultado no Jazzy é o que obtivemos rodando o mesmo código hoje, só com ajustes de API para compilar. A essência do modelo continua, mas duas premissas caíram. O Lema 3 (timers privilegiados) não vale mais: os timers caem na Eq. 6, como as demais callbacks. E a prioridade por ordem de registro deixou de existir no Jazzy: os subscribers foram registrados como high, medium, low, mas rodaram medium, low, high ou low, medium, high, variando entre execuções. A comunidade registrou isso na issue ros2/rclcpp#2532, aberta por alguém que rodou o próprio código dos autores do artigo.</aside>
 </section>
