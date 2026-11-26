@@ -1,6 +1,6 @@
 <section id="fig3-jazzy">
 <div class="head">
-<p class="eyebrow">Continua válido? · resultado gravado</p>
+<p class="eyebrow">Demo · ROS 2 Jazzy · ao vivo no final</p>
 <h2>O experimento da Fig. 3 no ROS 2 de hoje</h2>
 </div>
 <div class="row" style="align-items:start; gap:48px;">
@@ -11,5 +11,5 @@
 <div class="stack" style="gap:6px;"><p class="pill bad">mudou</p><p class="small">Ordem <b>L, M, H</b>: invertida em relação ao registro.</p></div>
 </div>
 </div>
-<aside>Cerca de 1 min. Não rodar ao vivo: é o resultado gravado. Para responder se o artigo continua válido, repetimos o experimento original dos autores (Figura 3) no ROS 2 Jazzy, com as mesmas tarefas sintéticas: subscribers H, M, L, services SH, SM, SL e timers t0 a t3, cada um ocupando a CPU por 500 ms. O SM chega em 1500 ms e só roda em 6500 ms, igual ao artigo. Mas duas coisas mudaram: os timers agora esperam a janela, e a ordem dentro do tipo ficou invertida. O próximo slide resume. Se quiserem rodar: bash ~/ros2-rta-seminario/demo/apresentar.sh single (leva uns 10 s).</aside>
+<aside>Cerca de 1 min 30. Aqui mostrar o gráfico gravado; rodar ao vivo no final da apresentação, antes das perguntas: bash ~/ros2-rta-seminario/demo/apresentar.sh single (uns 10 s, o gráfico abre sozinho). Para responder se o artigo continua válido, repetimos o experimento original dos autores (Figura 3) no ROS 2 Jazzy, com as mesmas tarefas sintéticas e a mesma sequência de chegadas: subscribers H, M, L (amarelo), services SH, SM, SL (azul) e timers t0 a t3 (vermelho), cada um ocupando a CPU por 500 ms. Os triângulos são as chegadas; a distância até o bloco é a espera. O SM chega em 1500 ms e só roda em 6500 ms, igual ao artigo. Mas duas coisas mudaram: os timers agora esperam a janela, e a ordem dentro do tipo ficou invertida. O próximo slide resume. Código: demo/ros2_ws/src/polling_demo/src/polling_demo.cpp, modo single.</aside>
 </section>

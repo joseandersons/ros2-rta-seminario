@@ -4,13 +4,13 @@
   "lists": "css",
   "format": {"v": 1, "shared": ["project/deck.css"]},
   "title": "RTA de Cadeias ROS 2",
-  "order": ["cover", "roteiro", "motivacao", "ros2", "executor", "polling", "reservas", "modelo", "rta-timers", "rta-pp", "cadeias", "movebase", "movebase-projetos", "demo-ros2", "fig3-jazzy", "achados", "linha-tempo", "mudancas", "aulas", "critica", "contribuicoes", "fim"],
+  "order": ["cover", "roteiro", "motivacao", "ros2", "executor", "polling", "reservas", "modelo", "rta-timers", "rta-pp", "cadeias", "movebase", "movebase-projetos", "fig3-jazzy", "achados", "linha-tempo", "mudancas", "aulas", "critica", "contribuicoes", "fim"],
   "sections": {
     "s1": {"description": "Abertura: o problema de garantir tempo em cadeias de callbacks do ROS 2", "start": "cover"},
     "s2": {"description": "Como o executor do ROS 2 escalona as callbacks", "start": "ros2"},
     "s3": {"description": "Modelo com reservas e análise de tempo de resposta", "start": "reservas"},
     "s4": {"description": "Estudo de caso move_base", "start": "movebase"},
-    "s5": {"description": "Demonstração: o robô no ROS 2 Jazzy e o experimento da Fig. 3", "start": "demo-ros2"},
+    "s5": {"description": "Demonstração: o experimento da Fig. 3 no ROS 2 Jazzy", "start": "fig3-jazzy"},
     "s6": {"description": "Situação atual: trabalhos posteriores e mudanças no executor", "start": "linha-tempo"},
     "s7": {"description": "Ligação com a disciplina, crítica e conclusão", "start": "aulas"}
   },
