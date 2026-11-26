@@ -86,6 +86,7 @@ def main():
     plt.rcParams.update({"font.size": 14})
     fig, ax = plt.subplots(figsize=(14, 7.5))
     fig.canvas.manager.set_window_title("Executor do ROS 2 ao vivo")
+    salvo = []
 
     def draw(_):
         tr.poll()
@@ -134,6 +135,10 @@ def main():
             Line2D([], [], color="#8a8a8a", ls=(0, (4, 3)), lw=2, label="esperando"),
         ], loc="upper center", bbox_to_anchor=(0.5, -0.12), ncol=5, frameon=False)
         fig.tight_layout()
+        # no fim, salva o quadro final como imagem (ao lado do CSV)
+        if status == "fim" and not salvo:
+            fig.savefig(tr.path.with_suffix(".png"), dpi=150)
+            salvo.append(True)
 
     anim = FuncAnimation(fig, draw, interval=50, cache_frame_data=False)  # noqa: F841
     plt.show()

@@ -1,23 +1,15 @@
 <section id="fig3-jazzy">
 <div class="head">
-<p class="eyebrow">Demo · ROS 2 Jazzy · ao vivo no final</p>
+<p class="eyebrow">Demo · código original dos autores · ao vivo no final</p>
 <h2>O experimento da Fig. 3 no ROS 2 de hoje</h2>
 </div>
 <div class="row" style="align-items:start; gap:48px;">
-<div class="stack" style="gap:12px; flex:none;">
-<img class="shot" src="/_blob/62bb22b8f951e8e78b19e15bf23672b0" alt="Diagrama de Gantt da execução no executor single-threaded do ROS 2 Jazzy: L, M e H rodam nessa ordem, SM chega em 1500 ms e só roda em 6500 ms, e os timers t2 e t3 vencem em 2300 ms mas só rodam a partir de 4000 ms" style="width:990px; height:540px;">
-<div class="row" style="gap:28px; justify-content:center;">
-<p class="note" style="display:flex; align-items:center; gap:8px;"><span style="width:24px; height:24px; border-radius:4px; background:#d1495b;"></span>timers</p>
-<p class="note" style="display:flex; align-items:center; gap:8px;"><span style="width:24px; height:24px; border-radius:4px; background:#edae49;"></span>subscribers</p>
-<p class="note" style="display:flex; align-items:center; gap:8px;"><span style="width:24px; height:24px; border-radius:4px; background:#00798c;"></span>services</p>
-<p class="note" style="display:flex; align-items:center; gap:8px;"><span style="color:#14202B;">▼</span>chegada</p>
-</div>
-</div>
+<img class="shot" src="/_blob/3e06bf71d615d66163e7f954473122f1" alt="Gráfico da execução do código original dos autores no ROS 2 Jazzy: a rajada inicial roda medium, low, high, srv_low e srv_high; os timers vencem em cerca de 400 ms e 2500 ms mas só rodam depois dessa janela; srv_medium chega em cerca de 2300 ms e só roda em cerca de 6800 ms" style="width:1000px; height:536px; flex:none;">
 <div class="stack grow" style="gap:36px;">
-<div class="stack" style="gap:6px;"><p style="font-size:30px; font-weight:600;">Mesmo experimento do artigo</p><p class="small">Mesmas tarefas e mesmas chegadas da Figura 3, só que no ROS 2 de hoje.</p></div>
-<div class="stack" style="gap:6px;"><p style="font-size:30px; font-weight:600;">Como ler</p><p class="small">Cada barra é uma callback de 500 ms. A distância do ▼ até a barra é a espera.</p></div>
-<div class="stack" style="gap:6px;"><p style="font-size:30px; font-weight:600; color:#B8730F;">Repare no SM</p><p class="small">Chega em 1500 ms e só roda em 6500 ms: 5 segundos esperando a comanda.</p></div>
+<div class="stack" style="gap:6px;"><p style="font-size:30px; font-weight:600;">O código dos próprios autores</p><p class="small">O mesmo programa do artigo, só ajustado para compilar no ROS 2 de hoje.</p></div>
+<div class="stack" style="gap:6px;"><p style="font-size:30px; font-weight:600;">Como ler</p><p class="small">Cada barra é uma callback de 500 ms. O ▼ é a chegada; a linha tracejada é a espera.</p></div>
+<div class="stack" style="gap:6px;"><p style="font-size:30px; font-weight:600; color:#B8730F;">Repare no srv_medium</p><p class="small">Chega em ~2,3 s e só roda em ~6,8 s: 4,5 segundos esperando a comanda.</p></div>
 </div>
 </div>
-<aside>Cerca de 1 min 30. Aqui mostrar o gráfico gravado; rodar ao vivo no final da apresentação, antes das perguntas: bash ~/ros2-rta-seminario/demo/apresentar.sh single (uns 10 s, o gráfico abre sozinho). Para responder se o artigo continua válido, repetimos o experimento original dos autores (Figura 3) no ROS 2 Jazzy, com as mesmas tarefas sintéticas e a mesma sequência de chegadas: subscribers H, M, L (amarelo), services SH, SM, SL (azul) e timers t0 a t3 (vermelho), cada um ocupando a CPU por 500 ms. Os triângulos são as chegadas; a distância até o bloco é a espera. O SM chega em 1500 ms e só roda em 6500 ms, igual ao artigo. O que mudou (timers esperando a janela e a ordem dentro do tipo) fica para o próximo slide. Código: demo/ros2_ws/src/polling_demo/src/polling_demo.cpp, modo single.</aside>
+<aside>Cerca de 1 min 30. Aqui mostrar o gráfico gravado; rodar ao vivo no final da apresentação, antes das perguntas: bash ~/ros2-rta-seminario/original/ao_vivo.sh (uns 10 s; a janela abre sozinha e desenha as callbacks enquanto rodam). É o código original dos autores (repositório boschresearch/ros2_response_time_analysis, pasta model_validation), com ajustes só de API para compilar no Jazzy; o gráfico é montado lendo os logs que o próprio código deles imprime. Tarefas: subscribers high, medium, low (amarelo), services srv_high, srv_medium, srv_low (azul) e timers 0 a 3 (vermelho), cada um ocupando 500 ms. A primeira barra curta do high (300 ms) é a mensagem de aquecimento que o script dos autores manda antes da rajada, para o executor estar ocupado quando ela chega. O srv_medium chega em ~2,3 s e só roda em ~6,8 s, igual ao artigo. O que mudou (timers esperando a janela e a ordem dentro do tipo) fica para o próximo slide. Os tempos variam um pouco a cada execução.</aside>
 </section>
