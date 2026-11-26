@@ -39,6 +39,20 @@ section::after {
   color: var(--muted);
 }
 
+/* quem apresenta o slide: discreto, no canto inferior esquerdo */
+section[data-quem]::before {
+  content: attr(data-quem);
+  position: absolute;
+  left: 128px;
+  bottom: 64px;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 24px;
+  color: var(--muted);
+  opacity: 0.75;
+}
+section.dark[data-quem]::before { color: var(--onink-muted); }
+section.accent[data-quem]::before { color: var(--onink); }
+
 section.alt { background: var(--paper2); }
 section.dark { background: var(--ink); color: var(--onink); }
 section.dark::after { color: var(--onink-muted); }
