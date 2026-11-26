@@ -1,21 +1,29 @@
 <section id="motivacao">
 <div class="head">
 <p class="eyebrow">Motivação</p>
-<h2>Quanto tempo vai do sensor ao atuador, no pior caso?</h2>
+<h2>Quanto tempo do sensor até a roda?</h2>
 </div>
-<div class="row" style="justify-content:center; gap:20px;">
-<p class="box" style="width:300px;">Sensor<br>(odometria)</p>
-<x-shape kind="arrow-right" style="width:72px; height:36px; background:#4A5866;"></x-shape>
-<p class="box sub" style="width:300px;">Callback<br>de filtro</p>
-<x-shape kind="arrow-right" style="width:72px; height:36px; background:#4A5866;"></x-shape>
-<p class="box sub" style="width:300px;">Callback<br>de controle</p>
-<x-shape kind="arrow-right" style="width:72px; height:36px; background:#4A5866;"></x-shape>
-<p class="box" style="width:300px;">Atuador<br>(rodas)</p>
+<div class="stack" style="gap:28px;">
+<div class="row" style="gap:16px;">
+<p class="box grow" style="padding:28px 16px;">Sensor vê a parede</p>
+<x-shape kind="arrow-right" style="width:56px; height:32px; background:#4A5866; flex:none;"></x-shape>
+<p class="box sub grow" style="padding:28px 16px;">Software processa</p>
+<x-shape kind="arrow-right" style="width:56px; height:32px; background:#4A5866; flex:none;"></x-shape>
+<p class="box sub grow" style="padding:28px 16px;">Software decide</p>
+<x-shape kind="arrow-right" style="width:56px; height:32px; background:#4A5866; flex:none;"></x-shape>
+<p class="box grow" style="padding:28px 16px;">Rodas desviam</p>
 </div>
-<div class="cols3">
-<div class="card"><h3>Middleware escalona</h3><p class="small">O ROS 2 decide a ordem das callbacks por conta própria, por cima do escalonador do Linux.</p></div>
-<div class="card"><h3>Componentes de terceiros</h3><p class="small">Pacotes escritos por equipes diferentes escondem o comportamento temporal do todo.</p></div>
-<div class="card"><h3>Cadeias por eventos</h3><p class="small">Uma callback publica, outra acorda: a latência se acumula ao longo da cadeia.</p></div>
+<div class="row" style="gap:24px;">
+<div class="grow" style="height:4px; background:var(--amber);"></div>
+<p class="big warn" style="font-size:96px; flex:none;">? ms</p>
+<div class="grow" style="height:4px; background:var(--amber);"></div>
 </div>
-<aside>Tempo real é garantia, não velocidade (aula 1). Num robô, o tempo entre o sensor detectar um obstáculo e as rodas reagirem é requisito de segurança. Antes deste artigo, quem usava ROS 2 só conseguia medir esse tempo depois de implementar tudo; não havia análise. Os três cards são os motivos que o artigo dá para isso ser difícil.</aside>
+<p class="lead" style="text-align:center;">no pior caso</p>
+</div>
+<div class="cols3" style="border-top:2px solid var(--line); padding-top:40px;">
+<div class="stack" style="gap:8px;"><p class="mono" style="font-size:28px; color:var(--teal);">01</p><h3>Muitas tarefas, uma CPU</h3></div>
+<div class="stack" style="gap:8px;"><p class="mono" style="font-size:28px; color:var(--teal);">02</p><h3>Ninguém conhece o sistema inteiro</h3></div>
+<div class="stack" style="gap:8px;"><p class="mono" style="font-size:28px; color:var(--teal);">03</p><h3>As esperas se somam</h3></div>
+</div>
+<aside>Cerca de 2 min. Sem jargão ainda: ROS, callback e executor só aparecem no próximo slide. "Num robô aspirador, o sensor vê a parede, o software processa, decide desviar e as rodas agem. A pergunta é: quanto tempo isso leva no pior caso? Ou seja, o máximo que pode demorar, porque tempo real é garantia, não velocidade (aula 1). A 1 m/s, cada 10 ms de atraso é 1 cm a mais antes de desviar." Os três itens de baixo: "É difícil saber porque são muitas tarefas disputando a mesma CPU, e a urgente pode esperar; o robô é montado com peças de várias empresas, como um computador: o sensor vem de uma, a navegação de outra; cada uma sabe o seu tempo, mas ninguém conhece o sistema inteiro; e cada etapa só começa quando a anterior termina, então as esperas se somam." Ponte: "O software que organiza tudo isso na maioria dos robôs se chama ROS 2. Vamos ver como ele funciona."</aside>
 </section>

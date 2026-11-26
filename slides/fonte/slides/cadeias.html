@@ -11,11 +11,11 @@
 <p class="eq" style="font-size:28px;">R = Σ Rᵢ + Σ δ</p>
 </div>
 <div class="card cool">
-<p class="pill ok">Lema 8</p>
+<div class="row" style="gap:12px;"><p class="pill ok">Lema 8</p><p class="pill warn">versão corrigida (errata)</p></div>
 <h3>Subcadeia analisada inteira</h3>
-<p class="small">Callbacks seguidas na mesma reserva são tratadas como um bloco com WCET somado. A rajada é paga uma vez só (<i>pay burst only once</i>).</p>
-<p class="eq" style="font-size:28px;">sbf(R) ≥ RBF(Γₖ, R − e_último + 1)</p>
+<p class="small">Callbacks seguidas na mesma reserva viram um bloco. A rajada é paga uma vez só (<i>pay burst only once</i>). A errata acrescentou o instante A, como nos outros lemas.</p>
+<p class="eq" style="font-size:24px;">sbf(A + R) ≥ η(A+1)·e_último<br>+ rbf_prefixo(A + R − e_último + 1)<br>+ RBF(outras, A + R − e_último + 1)</p>
 </div>
 </div>
-<aside>Este slide explica por que o artigo propõe a análise holística. Na nossa calculadora, a mesma cadeia dá 441 ms somando e 104 ms com o Lema 8. Γₖ é o conjunto de subcadeias da reserva; callbacks que não fazem parte da cadeia entram como subcadeias de um elemento só.</aside>
+<aside>Este slide explica por que o artigo propõe a análise holística. Num exemplo de cadeia sensor → filtro → controle (6 callbacks, reserva de 60%), dá 441 ms somando e 104 ms com o Lema 8; vale falar esses números, porque eles não aparecem em outro slide. Errata: a versão da conferência do Lema 8 não dependia do instante A (omitia testar várias chegadas da cadeia no busy period); a versão revisada do artigo corrige isso. A fórmula do slide é a corrigida: a última callback paga as instâncias anteriores dela (η(A+1)·e_último), o resto da cadeia e as outras callbacks pagam o que chegou até o último polling point. No nosso exemplo com 60%, a versão corrigida dá os mesmos 104 ms. Γₖ é o conjunto de subcadeias da reserva; callbacks que não fazem parte da cadeia entram como subcadeias de um elemento só.</aside>
 </section>

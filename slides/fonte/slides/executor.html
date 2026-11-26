@@ -1,23 +1,23 @@
 <section id="executor">
 <div class="head">
 <p class="eyebrow">O executor (Seção 3)</p>
-<h2>Um escalonador não preemptivo que olha uma foto do sistema</h2>
+<h2>Funciona como um garçom com uma comanda</h2>
 </div>
-<div class="row" style="justify-content:center; gap:16px;">
-<p class="box wait" style="width:240px;">Polling point<br><span style="font-weight:400;">tira a foto</span></p>
-<x-shape kind="arrow-right" style="width:60px; height:30px; background:#4A5866;"></x-shape>
-<p class="box timer" style="width:240px;">Timers</p>
-<x-shape kind="arrow-right" style="width:60px; height:30px; background:#4A5866;"></x-shape>
-<p class="box sub" style="width:240px;">Subscribers</p>
-<x-shape kind="arrow-right" style="width:60px; height:30px; background:#4A5866;"></x-shape>
-<p class="box" style="width:240px;">Services</p>
-<x-shape kind="arrow-right" style="width:60px; height:30px; background:#4A5866;"></x-shape>
-<p class="box" style="width:240px;">Clients</p>
+<div class="stack" style="gap:20px;">
+<div class="row" style="gap:16px; align-items:stretch;">
+<div class="box wait grow" style="display:flex; flex-direction:column; justify-content:center; gap:6px;"><span>1. Olha o salão</span><span style="font-weight:400; font-size:24px;">polling point</span></div>
+<x-shape kind="arrow-right" style="width:56px; height:32px; background:#4A5866; flex:none; align-self:center;"></x-shape>
+<div class="box grow" style="display:flex; flex-direction:column; justify-content:center; gap:10px;"><span>2. Anota quem chamou</span>
+<div class="row" style="gap:8px; justify-content:center; flex-wrap:wrap;"><span class="pill" style="background:#F2D7DA; color:#7E2230;">timers</span><span class="pill warn">subscribers</span><span class="pill">services</span><span class="pill">clients</span></div></div>
+<x-shape kind="arrow-right" style="width:56px; height:32px; background:#4A5866; flex:none; align-self:center;"></x-shape>
+<div class="box sub grow" style="display:flex; flex-direction:column; justify-content:center; gap:6px;"><span>3. Atende um por vez</span><span style="font-weight:400; font-size:24px;">até o fim, sem interromper</span></div>
+</div>
+<p class="lead" style="text-align:center;">↺ Só quando a comanda acaba ele olha o salão de novo.</p>
 </div>
 <div class="cols3">
-<div class="card cool"><h3>readySet</h3><p class="small">No polling point, o executor guarda o <b>conjunto</b> de callbacks prontas e só volta a olhar quando ele esvazia.</p></div>
-<div class="card cool"><h3>Prioridade fixa</h3><p class="small">Primeiro o tipo (da esquerda para a direita), depois a ordem em que a callback foi registrada.</p></div>
-<div class="card hot"><h3>Timers à parte</h3><p class="small">No Crystal, os timers eram checados a cada escolha, sem esperar o polling point.</p></div>
+<div class="card cool"><h3>A comanda</h3><p class="small">No artigo, <i>readySet</i>: as callbacks prontas no momento em que ele olhou.</p></div>
+<div class="card cool"><h3>A ordem</h3><p class="small">Primeiro pelo tipo, da esquerda para a direita. No mesmo tipo, pela ordem do código.</p></div>
+<div class="card hot"><h3>Timers à parte</h3><p class="small">No artigo, os timers eram exceção: não esperavam a comanda. <b>Isso mudou.</b></p></div>
 </div>
-<aside>Este é o comportamento que os autores descobriram lendo o código-fonte, porque não havia documentação. O intervalo entre dois polling points é a “janela de processamento”. Guardem o card dos timers: é exatamente o que mudou nas versões seguintes, e vamos mostrar isso na demo.</aside>
+<aside>Cerca de 2 min. "O executor funciona como um garçom. Primeiro ele olha o salão: esse momento se chama polling point. Depois anota numa comanda quem está chamando; no artigo, essa comanda se chama readySet. E atende a comanda inteira, um por vez, sem interromper ninguém. A ordem é pelo tipo: timers primeiro, depois subscribers, services e clients; e, no mesmo tipo, pela ordem em que a callback aparece no código. Só quando a comanda acaba ele olha o salão de novo. Um detalhe: na versão do artigo, os timers eram exceção e não esperavam a comanda. Guardem isso, porque mudou, e a nossa demo mostra." Contexto: os autores descobriram esse comportamento lendo o código-fonte, porque não havia documentação.</aside>
 </section>

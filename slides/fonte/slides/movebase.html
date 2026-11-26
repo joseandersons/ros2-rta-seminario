@@ -1,13 +1,19 @@
 <section id="movebase" class="alt">
 <div class="head">
 <p class="eyebrow">Estudo de caso (Seção 6)</p>
-<h2>move_base: da odometria ao comando das rodas</h2>
+<h2>move_base: a navegação de um robô com rodas</h2>
 </div>
-<p class="lead">Planejador local (crítico) e global (até 200 ms) em reservas separadas, com dados de um caso real da Bosch. Duas versões: por tempo (12,5 Hz) e por eventos.</p>
-<div class="cols3">
-<div class="card cool"><p class="big">80 ms</p><p class="small">A versão por tempo paga um período de amostragem a mais que a por eventos.</p></div>
-<div class="card hot"><p class="big warn">40 ms</p><p class="small">Acima desse jitter nos sensores, a versão por eventos perde: chegam rajadas.</p></div>
-<div class="card"><p class="big" style="color:#14202B;">4×</p><p class="small">Interferência contada a mais sem a análise da cadeia inteira (Lema 8).</p></div>
+<p class="lead">Você diz "vai até a cozinha" e ele leva o robô até lá sem bater. Pense numa pessoa dirigindo com GPS.</p>
+<div class="stack" style="gap:12px; align-items:center;">
+<div class="row" style="gap:16px; justify-content:center;">
+<div class="box" style="width:340px; padding:24px 16px; display:flex; flex-direction:column; gap:6px;"><p style="font-size:30px; font-weight:600;">Sensores</p><p class="note">os olhos</p></div>
+<x-shape kind="arrow-right" style="width:72px; height:32px; background:#4A5866; flex:none;"></x-shape>
+<div class="box" style="width:500px; padding:24px 16px; border-width:4px; display:flex; flex-direction:column; gap:6px;"><p style="font-size:30px; font-weight:600;">Planejador local</p><p class="note">o motorista · decide a cada instante</p><p class="pill ok" style="align-self:center; font-size:22px;">reserva 1 · crítica</p></div>
+<x-shape kind="arrow-right" style="width:72px; height:32px; background:#4A5866; flex:none;"></x-shape>
+<div class="box" style="width:340px; padding:24px 16px; display:flex; flex-direction:column; gap:6px;"><p style="font-size:30px; font-weight:600;">Rodas</p><p class="note">o pé e o volante</p></div>
 </div>
-<aside>O move_base é o núcleo da navegação de robôs com rodas no ROS. Como ele ainda não existia para ROS 2, os autores modelaram a versão do ROS 1 como se rodasse no ROS 2. Os resultados são todos analíticos, sem escrever código de robô. O ponto do estudo: dá para comparar projetos (por tempo ou por eventos, quanto orçamento dar à reserva) antes de implementar.</aside>
+<x-shape kind="arrow-up" style="width:32px; height:48px; background:#4A5866;"></x-shape>
+<div class="box" style="width:500px; padding:20px 16px; border-style:dashed; border-color:#4A5866; display:flex; flex-direction:column; gap:6px;"><p style="font-size:30px; font-weight:600;">Planejador global</p><p class="note">o GPS · traça a rota no mapa, lento (até 200 ms)</p><p class="pill" style="align-self:center; font-size:22px;">reserva 2</p></div>
+</div>
+<aside>Cerca de 1 min 30. "Para testar a análise num sistema realista, os autores usaram o move_base, o pacote de navegação mais usado em robôs com rodas, com dados de um caso real da indústria. Você diz 'vai até a cozinha' e ele leva o robô até lá sem bater." Apontar o desenho: "Pensem numa pessoa dirigindo com GPS. Os sensores são os olhos. O planejador global é o GPS: olha o mapa e traça a rota; demora, até 200 ms, mas só recalcula de vez em quando. O planejador local é o motorista: segue a rota e decide a cada instante se freia ou desvia. E as rodas são o pé e o volante." "O motorista não pode ficar esperando o GPS recalcular para frear. Por isso cada um tem a sua reserva de CPU: a reserva 1 só para o motorista, que é o crítico, e a reserva 2 para o GPS. Um não rouba tempo do outro." Se perguntarem: como o move_base ainda não existia no ROS 2, eles modelaram a versão do ROS 1 como se rodasse no ROS 2.</aside>
 </section>

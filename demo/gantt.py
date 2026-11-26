@@ -21,11 +21,18 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 
-ORDER = ["t0", "t1", "t2", "t3", "H", "M", "L", "SH", "SM", "SL"]
+ORDER = ["sensor", "desviar", "bateria",
+         "t0", "t1", "t2", "t3", "H", "M", "L", "SH", "SM", "SL"]
 COLORS = {"t": "#d1495b", "S": "#00798c", "_": "#edae49"}
+# modo "robo": mesmas cores e nomes do slide 6
+ROBO = {"sensor": ("Ler sensor", "#CECBF6"),
+        "desviar": ("Desviar", "#F5C4B3"),
+        "bateria": ("Bateria", "#9FE1CB")}
 
 
 def color(name):
+    if name in ROBO:
+        return ROBO[name][1]
     if name.startswith("t"):
         return COLORS["t"]
     if name.startswith("S"):
@@ -55,7 +62,7 @@ def main():
             ax.plot(a, y[n] + 0.45, marker="v", color="black", ms=6)
 
     ax.set_yticks(list(y.values()))
-    ax.set_yticklabels(list(y.keys()))
+    ax.set_yticklabels([ROBO[n][0] if n in ROBO else n for n in y.keys()])
     ax.set_xlabel("tempo desde T0 (ms)")
     ax.set_title(f"Execução das callbacks — {path.stem}")
     ax.grid(axis="x", alpha=.3)

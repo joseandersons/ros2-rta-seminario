@@ -1,13 +1,53 @@
 <section id="polling" class="dark">
 <div class="head">
 <p class="eyebrow">Consequência dos polling points</p>
-<h2>A prioridade alta pode esperar uma janela inteira de prioridade baixa</h2>
+<h2>A tarefa urgente espera a comanda inteira</h2>
 </div>
-<div class="cols3">
-<div class="card"><h3>Chegou tarde, espera</h3><p class="small">Uma mensagem que chega no meio da janela só entra no próximo polling point, mesmo que seja a mais prioritária.</p></div>
-<div class="card"><h3>Uma por janela</h3><p class="small">O readySet é um conjunto: com 3 mensagens na fila, a callback roda uma vez por janela e leva 3 janelas.</p></div>
-<div class="card"><h3>Inversão de prioridade</h3><p class="small">Callbacks de prioridade menor atrasam a maior, como no Mars Pathfinder (aula 10).</p></div>
+<div class="stack" style="gap:8px;">
+<div class="row" style="gap:24px; align-items:flex-start;">
+<div class="stack" style="width:260px; flex:none; gap:0; padding-top:50px;">
+<p style="height:76px; font-size:26px; display:flex; align-items:center;">Ler sensor</p>
+<p style="height:76px; font-size:26px; display:flex; align-items:center; color:#E8B062;"><b>Desviar</b></p>
+<p style="height:76px; font-size:26px; display:flex; align-items:center;">Bateria</p>
 </div>
-<p class="lead">Os autores confirmaram o modelo com um experimento: tópicos H, M, L, services SH, SM, SL e timers, todos com 500 ms de execução (Fig. 3). <b style="color:#6FC3D1;">Nós repetimos esse experimento no ROS 2 atual.</b></p>
-<aside>Este é o resultado que mais importa da Seção 3. Ligação com a aula 10: no Mars Pathfinder, uma tarefa de prioridade baixa segurava um recurso e a de prioridade alta esperava. Aqui não há mutex, mas o efeito é parecido: a janela em andamento, cheia de callbacks de prioridade menor, atrasa a de prioridade maior. Anunciar que vamos mostrar isso ao vivo na demo.</aside>
+<div style="position:relative; width:1380px; height:278px; flex:none;">
+<div style="position:absolute; left:0; top:124px; width:1380px; height:2px; background:#2E4252;"></div>
+<div style="position:absolute; left:0; top:200px; width:1380px; height:2px; background:#2E4252;"></div>
+<div style="position:absolute; left:0; top:276px; width:1380px; height:2px; background:#2E4252;"></div>
+<div style="position:absolute; left:0; top:40px; width:3px; height:238px; background:#E8EEF0;"></div>
+<p class="mono" style="position:absolute; left:12px; top:0; width:700px; font-size:24px; color:#A9BCC3;">comanda 1: sensor, bateria</p>
+<p class="fragment" data-fragment-index="1" style="position:absolute; left:4px; top:139px; width:208px; height:50px; box-sizing:border-box; border:2px dashed #E8B062; border-right:none; border-radius:8px 0 0 8px; font-size:24px; color:#E8B062; display:flex; align-items:center; justify-content:center;">parede!</p>
+<p class="fragment" data-fragment-index="2" style="position:absolute; left:0; top:63px; width:212px; height:50px; background:#CECBF6; color:#26215C; border-radius:8px; font-size:24px; font-weight:600; display:flex; align-items:center; justify-content:center;">sensor</p>
+<p class="fragment" data-fragment-index="3" style="position:absolute; left:212px; top:215px; width:530px; height:50px; background:#9FE1CB; color:#04342C; border-radius:8px; font-size:24px; font-weight:600; display:flex; align-items:center; justify-content:center;">bateria</p>
+<p class="fragment" data-fragment-index="3" style="position:absolute; left:212px; top:139px; width:530px; height:50px; box-sizing:border-box; border-top:2px dashed #E8B062; border-bottom:2px dashed #E8B062; font-size:24px; color:#E8B062; display:flex; align-items:center; justify-content:center;">esperando...</p>
+<div class="fragment" data-fragment-index="4" style="position:absolute; left:742px; top:40px; width:3px; height:238px; background:#E8EEF0;"></div>
+<p class="mono fragment" data-fragment-index="4" style="position:absolute; left:754px; top:0; width:620px; font-size:24px; color:#A9BCC3;">comanda 2: sensor, desviar</p>
+<p class="fragment" data-fragment-index="5" style="position:absolute; left:745px; top:63px; width:209px; height:50px; background:#CECBF6; color:#26215C; border-radius:8px; font-size:24px; font-weight:600; display:flex; align-items:center; justify-content:center;">sensor</p>
+<p class="fragment" data-fragment-index="5" style="position:absolute; left:745px; top:139px; width:209px; height:50px; box-sizing:border-box; border:2px dashed #E8B062; border-left:none; border-radius:0 8px 8px 0; font-size:24px; color:#E8B062;"></p>
+<p class="fragment" data-fragment-index="6" style="position:absolute; left:954px; top:139px; width:318px; height:50px; background:#F5C4B3; color:#4A1B0C; border-radius:8px; font-size:24px; font-weight:600; display:flex; align-items:center; justify-content:center;">desviar</p>
+</div>
+</div>
+<div class="row" style="gap:24px;">
+<div style="width:260px; flex:none;"></div>
+<div style="position:relative; width:1380px; height:32px; flex:none;">
+<p style="position:absolute; left:-20px; top:0; width:40px; text-align:center; font-size:24px; color:#A9BCC3;">0</p>
+<p style="position:absolute; left:192px; top:0; width:40px; text-align:center; font-size:24px; color:#A9BCC3;">2</p>
+<p style="position:absolute; left:404px; top:0; width:40px; text-align:center; font-size:24px; color:#A9BCC3;">4</p>
+<p style="position:absolute; left:616px; top:0; width:40px; text-align:center; font-size:24px; color:#A9BCC3;">6</p>
+<p style="position:absolute; left:722px; top:0; width:40px; text-align:center; font-size:24px; color:#E8EEF0;">7</p>
+<p style="position:absolute; left:828px; top:0; width:40px; text-align:center; font-size:24px; color:#A9BCC3;">8</p>
+<p style="position:absolute; left:934px; top:0; width:40px; text-align:center; font-size:24px; color:#E8EEF0;">9</p>
+<p style="position:absolute; left:1040px; top:0; width:40px; text-align:center; font-size:24px; color:#A9BCC3;">10</p>
+<p style="position:absolute; left:1252px; top:0; width:40px; text-align:center; font-size:24px; color:#E8EEF0;">12</p>
+<p style="position:absolute; left:1300px; top:0; width:80px; text-align:right; font-size:24px; color:#A9BCC3;">ms</p>
+</div>
+</div>
+<p class="fragment" data-fragment-index="7" style="font-size:30px; text-align:right;"><span style="color:#E8B062;">esperou 9 ms</span> + 3 ms de trabalho = <b>resposta: 12 ms</b></p>
+</div>
+<div class="cols3 fragment" data-fragment-index="8">
+<div class="card"><h3>Chegou depois, espera</h3><p class="small">Fora da comanda, espera a próxima volta, mesmo sendo a mais urgente.</p></div>
+<div class="card"><h3>Uma vez por volta</h3><p class="small">Com 3 mensagens na fila, a callback roda uma por comanda: leva 3 voltas.</p></div>
+<div class="card"><h3>Inversão de prioridade</h3><p class="small">Tarefas menos importantes atrasam a mais importante, como no Mars Pathfinder (aula 10).</p></div>
+</div>
+<aside>Cerca de 2 min. Slide com 8 cliques. Início: "Voltando ao robô. Cada linha é uma tarefa, e o eixo é o tempo em milissegundos. O garçom acabou de anotar a comanda 1: ler sensor e bateria." [1] "Logo depois chega a mensagem 'parede!'. Ela não está na comanda, então espera." [2] "O garçom atende o sensor..." [3] "...depois a bateria, até o fim, sem interromper. O desviar continua esperando." [4] "Comanda acabou em 7 ms, ele olha de novo: agora vê o 'desviar'. Mas o sensor chamou de novo." [5] "E timer vai primeiro, então passa na frente outra vez." [6] "Só agora, em 9 ms, o robô desvia." [7] "Esperou 9 ms. São 3 ms de trabalho e 12 ms de resposta." [8] "Então: quem chega depois da comanda espera a volta inteira. Cada callback roda uma vez por volta; com três mensagens na fila, leva três voltas. E isso é inversão de prioridade, como no Mars Pathfinder da aula 10. Os autores mostraram isso num experimento, a Figura 3, e nós repetimos no ROS 2 de hoje; vamos mostrar na demo."</aside>
 </section>

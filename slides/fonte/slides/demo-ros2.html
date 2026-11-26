@@ -1,15 +1,13 @@
 <section id="demo-ros2" class="alt">
 <div class="head">
-<p class="eyebrow">Demo 2 · ROS 2 Jazzy ao vivo</p>
-<h2>O experimento da Fig. 3 no ROS 2 de hoje</h2>
+<p class="eyebrow">Demo · ROS 2 Jazzy ao vivo</p>
+<h2>A cena do robô rodando de verdade</h2>
 </div>
-<div class="row" style="align-items:start; gap:48px;">
-<img class="shot" src="/_blob/62bb22b8f951e8e78b19e15bf23672b0" alt="Diagrama de Gantt da execução no executor single-threaded do ROS 2 Jazzy: L, M e H rodam nessa ordem, SM chega em 1500 ms e só roda em 6500 ms, e os timers t2 e t3 vencem em 2300 ms mas só rodam a partir de 4000 ms" style="width:990px; height:540px;">
-<div class="stack grow" style="gap:28px;">
-<div class="stack" style="gap:6px;"><p class="pill ok">igual ao artigo</p><p class="small"><b>SM</b> chega em 1500 ms e só roda em 6500 ms: polling point.</p></div>
-<div class="stack" style="gap:6px;"><p class="pill bad">mudou</p><p class="small"><b>t2/t3</b> vencem em 2300 ms e esperam a janela acabar.</p></div>
-<div class="stack" style="gap:6px;"><p class="pill bad">mudou</p><p class="small">Ordem <b>L, M, H</b>: invertida em relação ao registro.</p></div>
+<img class="shot" src="/_blob/eb37c218d7564bd08e877c0ebef98d56" alt="Gráfico de execução no ROS 2 Jazzy: Ler sensor roda de 0 a 200 ms, Bateria de 200 a 710 ms, Ler sensor de novo de 710 a 910 ms e só então Desviar, de 910 a 1210 ms, embora a mensagem de parede tenha chegado em 50 ms" style="width:1600px; height:414px; align-self:center;">
+<div class="cols3">
+<div class="stack" style="gap:6px;"><p class="pill ok">igual ao desenho</p><p class="small"><b>Desviar</b> chega em 50 ms e só roda em ~910 ms: esperou a comanda inteira.</p></div>
+<div class="stack" style="gap:6px;"><p class="pill warn">ROS 2 de hoje</p><p class="small"><b>Ler sensor</b> vence em 600 ms e também espera a comanda acabar.</p></div>
+<div class="stack" style="gap:6px;"><p class="pill bad">resposta</p><p class="small">~1160 ms para 300 ms de trabalho: quase tudo é espera.</p></div>
 </div>
-</div>
-<aside>Rodar ao vivo no Ubuntu (WSL): bash ~/ros2-rta-seminario/demo/apresentar.sh single. Leva uns 10 segundos e o Gantt abre sozinho. Se algo falhar, este gráfico é o resultado já gravado. Cada callback ocupa a CPU por 500 ms; os triângulos são as chegadas. Os tempos variam um pouco a cada execução porque o WSL não é tempo real, mas os três pontos se repetem.</aside>
+<aside>Rodar ao vivo no Ubuntu (WSL): bash ~/ros2-rta-seminario/demo/apresentar.sh robo. Leva uns 3 segundos e o gráfico abre sozinho. Antes, mostrar o código no VS Code: polling_demo.cpp, classe Robo (as três callbacks e os tempos) e a função run_robo (a parede chega em 50 ms). É a mesma cena do slide 6, com os tempos multiplicados por 100 para dar para ver: sensor 200 ms, bateria 500 ms, desviar 300 ms. Os triângulos são as chegadas. Se algo falhar, este gráfico é o resultado já gravado. Os números variam alguns milissegundos a cada execução porque o WSL não é tempo real, mas a ordem se repete.</aside>
 </section>

@@ -1,22 +1,19 @@
 <section id="ros2" class="alt">
 <div class="head">
 <p class="eyebrow">ROS 2 em um slide</p>
-<h2>Nós, tópicos e callbacks executados por um executor</h2>
+<h2>Nós conversam por tópicos; um executor decide quem roda</h2>
 </div>
-<div class="cols" style="grid-template-columns:1.1fr 0.9fr; align-items:start;">
-<ul class="points">
-<li>Nós publicam mensagens em tópicos; quem assina é acordado por uma <b>callback</b>.</li>
-<li>Quatro tipos de callback: <b>timers</b>, <b>subscribers</b>, <b>services</b> e <b>clients</b>.</li>
-<li>Um <b>executor</b> é uma thread que roda várias callbacks, uma de cada vez, até o fim.</li>
-<li>O artigo analisa o executor <b>single-threaded</b> do ROS 2 “Crystal” (dez/2018), em C++.</li>
-</ul>
-<div class="stack" style="gap:12px;">
-<p class="box" style="border-color:#14202B;">Aplicação (nós e callbacks)</p>
-<p class="box">rclcpp · <b>executor</b></p>
-<p class="box" style="border-color:#C9D1D3;">rcl · rmw</p>
-<p class="box" style="border-color:#C9D1D3;">DDS (publish-subscribe)</p>
-<p class="box wait">Linux</p>
+<div class="row" style="gap:16px;">
+<p class="box grow" style="padding:24px 16px;">Nó sensor</p>
+<div class="stack" style="gap:6px; align-items:center; flex:none; width:220px;"><p class="mono" style="font-size:24px; color:var(--teal);">/distancia</p><x-shape kind="arrow-right" style="width:120px; height:32px; background:#4A5866;"></x-shape></div>
+<p class="box sub grow" style="padding:24px 16px;">Nó obstáculo</p>
+<div class="stack" style="gap:6px; align-items:center; flex:none; width:220px;"><p class="mono" style="font-size:24px; color:var(--teal);">/comando</p><x-shape kind="arrow-right" style="width:120px; height:32px; background:#4A5866;"></x-shape></div>
+<p class="box grow" style="padding:24px 16px;">Nó motor</p>
 </div>
+<div class="cols3">
+<div class="card"><h3>Tópico</h3><p class="small">Um canal com nome. Quem publica não sabe quem recebe, como no MQTT, mas sem servidor central.</p></div>
+<div class="card"><h3>Callback</h3><p class="small">A função que roda quando algo acontece: <b>timer</b> (de tempos em tempos) ou <b>subscriber</b> (chegou mensagem).</p></div>
+<div class="card hot"><h3>Executor</h3><p class="small">O escalonador do ROS. Escolhe qual callback roda e não interrompe nenhuma até ela terminar.</p></div>
 </div>
-<aside>Explicar o mínimo de ROS 2 para o resto fazer sentido. O ponto central: o executor é um escalonador dentro do middleware. Ele é não preemptivo, porque cada callback roda até terminar. A comunicação entre nós é troca de mensagens assíncrona, como vimos na aula 9.</aside>
+<aside>Cerca de 1 min 30. "O ROS 2 divide o programa do robô em nós, cada um com uma tarefa. No aspirador: o nó sensor publica a distância no tópico /distancia, o nó obstáculo recebe, decide e publica em /comando, e o nó motor age. Tópico é um canal com nome, parecido com o MQTT, mas sem servidor no meio. Quando chega uma mensagem, o nó roda uma função que a gente deixou combinada: a callback. As principais são timers, que rodam de tempos em tempos, e subscribers, que rodam quando chega mensagem. E quem decide qual callback roda e quando é o executor, o escalonador do ROS. Detalhe importante: ele não interrompe ninguém; cada callback roda até o fim." Se perguntarem: existem também services e clients (pergunta e resposta); o artigo analisa a versão Crystal (2018), em C++.</aside>
 </section>

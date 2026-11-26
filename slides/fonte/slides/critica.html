@@ -13,5 +13,6 @@
 <div class="card"><h3>Escopo estreito, sem validação</h3><p class="small">Só single-threaded, sem cache, multicore ou rede detalhada; limites nunca comparados com medições.</p></div>
 </div>
 </div>
-<aside>Critério “olhar crítico”. O ponto mais forte é o primeiro: o modelo dependia de detalhes que o ROS 2 não garantia, e nossa demo mostra isso. O último ponto também é importante: o estudo de caso é todo analítico, modelando o move_base do ROS 1 como se rodasse no ROS 2, sem comparar o limite calculado com latências medidas num sistema real.</aside>
+<div class="card" style="border-color:#B8730F;"><h3>Errata no Lema 8</h3><p class="small">A análise de cadeias omitia o instante A; os autores corrigiram depois, e a Fig. 8 mudou. Reproduzimos as duas versões.</p></div>
+<aside>Critério “olhar crítico”. O ponto mais forte é o primeiro: o modelo dependia de detalhes que o ROS 2 não garantia, e nossa demo mostra isso. O último ponto também é importante: o estudo de caso é todo analítico, modelando o move_base do ROS 1 como se rodasse no ROS 2, sem comparar o limite calculado com latências medidas num sistema real. Errata: a versão da conferência do Lema 8 não dependia do instante A; a versão revisada do artigo e o código dos autores (2020) corrigem isso. Rodando o código dos autores antes e depois da correção, reproduzimos as duas Figuras 8: as conclusões se mantêm, mas os números mudam (por eventos vence até 150 ms de jitter, e não 40 ms).</aside>
 </section>

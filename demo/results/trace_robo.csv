@@ -1,0 +1,11 @@
+evento,nome,inicio_ms,fim_ms
+arrive,sensor,0,0
+arrive,sensor,600,600
+arrive,sensor,1200,1200
+arrive,bateria,0.160519,0.158821
+arrive,desviar,50.2108,50.2097
+run,sensor,12.5527,212.553
+run,bateria,212.733,712.733
+run,sensor,712.945,912.945
+run,desviar,913.084,1213.1
+run,sensor,1213.26,1413.26
