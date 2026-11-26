@@ -13,11 +13,11 @@
 <p class="note" style="display:flex; align-items:center; gap:8px;"><span style="color:#14202B;">▼</span>chegada</p>
 </div>
 </div>
-<div class="stack grow" style="gap:28px;">
-<div class="stack" style="gap:6px;"><p class="pill ok">igual ao artigo</p><p class="small"><b>SM</b> chega em 1500 ms e só roda em 6500 ms: polling point.</p></div>
-<div class="stack" style="gap:6px;"><p class="pill bad">mudou</p><p class="small"><b>t2/t3</b> vencem em 2300 ms e esperam a janela acabar.</p></div>
-<div class="stack" style="gap:6px;"><p class="pill bad">mudou</p><p class="small">Ordem <b>L, M, H</b>: invertida em relação ao registro.</p></div>
+<div class="stack grow" style="gap:36px;">
+<div class="stack" style="gap:6px;"><p style="font-size:30px; font-weight:600;">Mesmo experimento do artigo</p><p class="small">Mesmas tarefas e mesmas chegadas da Figura 3, só que no ROS 2 de hoje.</p></div>
+<div class="stack" style="gap:6px;"><p style="font-size:30px; font-weight:600;">Como ler</p><p class="small">Cada barra é uma callback de 500 ms. A distância do ▼ até a barra é a espera.</p></div>
+<div class="stack" style="gap:6px;"><p style="font-size:30px; font-weight:600; color:#B8730F;">Repare no SM</p><p class="small">Chega em 1500 ms e só roda em 6500 ms: 5 segundos esperando a comanda.</p></div>
 </div>
 </div>
-<aside>Cerca de 1 min 30. Aqui mostrar o gráfico gravado; rodar ao vivo no final da apresentação, antes das perguntas: bash ~/ros2-rta-seminario/demo/apresentar.sh single (uns 10 s, o gráfico abre sozinho). Para responder se o artigo continua válido, repetimos o experimento original dos autores (Figura 3) no ROS 2 Jazzy, com as mesmas tarefas sintéticas e a mesma sequência de chegadas: subscribers H, M, L (amarelo), services SH, SM, SL (azul) e timers t0 a t3 (vermelho), cada um ocupando a CPU por 500 ms. Os triângulos são as chegadas; a distância até o bloco é a espera. O SM chega em 1500 ms e só roda em 6500 ms, igual ao artigo. Mas duas coisas mudaram: os timers agora esperam a janela, e a ordem dentro do tipo ficou invertida. O próximo slide resume. Código: demo/ros2_ws/src/polling_demo/src/polling_demo.cpp, modo single.</aside>
+<aside>Cerca de 1 min 30. Aqui mostrar o gráfico gravado; rodar ao vivo no final da apresentação, antes das perguntas: bash ~/ros2-rta-seminario/demo/apresentar.sh single (uns 10 s, o gráfico abre sozinho). Para responder se o artigo continua válido, repetimos o experimento original dos autores (Figura 3) no ROS 2 Jazzy, com as mesmas tarefas sintéticas e a mesma sequência de chegadas: subscribers H, M, L (amarelo), services SH, SM, SL (azul) e timers t0 a t3 (vermelho), cada um ocupando a CPU por 500 ms. Os triângulos são as chegadas; a distância até o bloco é a espera. O SM chega em 1500 ms e só roda em 6500 ms, igual ao artigo. O que mudou (timers esperando a janela e a ordem dentro do tipo) fica para o próximo slide. Código: demo/ros2_ws/src/polling_demo/src/polling_demo.cpp, modo single.</aside>
 </section>
