@@ -72,6 +72,41 @@ class Trace:
                     self.end[name].append(b)
 
 
+def tipo(n):
+    """Ordem do executor entre tipos: timers, subscribers, services."""
+    if n.startswith("t"):
+        return 0
+    if n.startswith("S") or n.startswith("srv_"):
+        return 2
+    return 1
+
+
+def comandas(tr, nomes):
+    """Deduz as comandas (readySet) pelo modelo do artigo.
+
+    O ROS 2 não registra os polling points, então eles são reconstruídos:
+    cada comanda começa quando a primeira callback dela começa e contém,
+    uma vez cada, todas as callbacks que já estavam prontas naquele instante.
+    Ela termina quando essas callbacks rodaram; aí vem a próxima.
+    Devolve [(início_ms, [nomes na ordem em que rodaram/vão rodar]), ...].
+    """
+    seq = sorted((s, n) for n in nomes for s in tr.start[n])
+    res, i = [], 0
+    while i < len(seq):
+        pp = seq[i][0]
+        feitos = defaultdict(int)
+        for _, m in seq[:i]:
+            feitos[m] += 1
+        prontos = [n for n in nomes
+                   if sum(1 for a in tr.arrive[n] if a <= pp + 1) > feitos[n]]
+        k = max(1, len(prontos))
+        membros = [m for _, m in seq[i:i + k]]
+        membros += [n for n in sorted(prontos, key=tipo) if n not in membros]
+        res.append((pp, membros))
+        i += k
+    return res
+
+
 def main():
     if len(sys.argv) < 2:
         print(__doc__)
@@ -119,9 +154,23 @@ def main():
             for a in arrivals:
                 ax.plot(a, yy + 0.5, marker="v", color="black", ms=9, zorder=3)
 
+        # comandas: faixas alternadas, linha no polling point e o número
+        cmds = comandas(tr, ORDER) if tr.epoch is not None else []
+        topo = len(ORDER) + 0.15
+        for i, (pp, membros) in enumerate(cmds):
+            fim = cmds[i + 1][0] if i + 1 < len(cmds) else now
+            if i % 2 == 0:
+                ax.axvspan(pp, fim, color="#E9EEF1", zorder=0)
+            ax.axvline(pp, color="#4A5866", lw=1.2, alpha=0.8, zorder=1)
+            rotulo = f"comanda {i + 1}" if fim - pp > 900 else f"{i + 1}"
+            ax.text(pp + 40, topo, rotulo, fontsize=13, color="#14202B",
+                    va="center", ha="left", fontweight="bold")
+        if cmds and status != "fim":
+            status += f"\ncomanda {len(cmds)}: " + ", ".join(cmds[-1][1])
+
         ax.axvline(now, color="#14202B", lw=1.5, alpha=0.6)
         ax.set_xlim(-100, XMAX)
-        ax.set_ylim(-0.7, len(ORDER) - 0.2)
+        ax.set_ylim(-0.7, len(ORDER) + 0.5)
         ax.set_yticks(list(y.values()))
         ax.set_yticklabels(list(y.keys()))
         ax.set_xlabel("tempo desde o início (ms)")

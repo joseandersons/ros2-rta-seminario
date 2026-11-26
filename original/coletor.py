@@ -56,6 +56,7 @@ def main():
     epoch = None           # horário (s) do envio do 1º lote = instante 0
     lote1, lote2 = [], []  # nomes enviados antes e depois dos 'delay'
     inicio = {}            # nome -> lista de inícios ainda sem fim
+    lote1_enviado = False
     terminou = False
 
     def emitir(ev, n, a, b):
@@ -82,11 +83,20 @@ def main():
                 epoch = t
                 out.write(f"epoch,T0,{epoch * 1000:.1f},{epoch * 1000:.1f}\n")
                 emitir("arrive", "high", 0, 0)  # mensagem inicial dos autores (300 ms)
+            elif msg == "delaying..." and epoch is not None and not lote1_enviado:
+                # o 1º lote é enviado ~100 ms depois da mensagem inicial, logo
+                # antes do primeiro 'delaying...'
                 for n in lote1:
-                    emitir("arrive", n, 0, 0)
-            elif msg == "Processing sent callbacks" and epoch is not None:
-                for n in lote2:
                     emitir("arrive", n, ms(t), ms(t))
+                lote1_enviado = True
+            elif msg == "Processing sent callbacks" and epoch is not None:
+                if not lote1_enviado:  # sequência sem 'delay'
+                    for n in lote1:
+                        emitir("arrive", n, ms(t), ms(t))
+                    lote1_enviado = True
+                else:
+                    for n in lote2:
+                        emitir("arrive", n, ms(t), ms(t))
 
         # o log do nó só é lido depois de conhecido o instante 0
         for linha in (no.novas() if epoch is not None else []):
