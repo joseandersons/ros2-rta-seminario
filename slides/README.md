@@ -14,7 +14,7 @@ A pasta [`fonte/`](fonte/) guarda uma cópia do código dos slides:
 - `deck.css`: estilo compartilhado;
 - `slides/<id>.html`: um arquivo por slide, com as notas do apresentador no `<aside>` final.
 
-As imagens (`/_blob/...`) ficam guardadas na própria apresentação. Os originais estão em `demo/rta/sweep.png` e `demo/results/`.
+As imagens (`/_blob/...`) ficam guardadas na própria apresentação. Os originais estão em `demo/results/`.
 
 ## Roteiro (30 min)
 

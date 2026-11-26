@@ -53,9 +53,9 @@ static void log_event(const std::string & ev, const std::string & name, double a
   printf("%-6s %-4s %8.1f %8.1f\n", ev.c_str(), name.c_str(), a, b);
 }
 
-static void busy(const std::string & name, std::chrono::milliseconds dur = 500ms) {
+static void busy(const std::string & name) {
   const double start = now_ms();
-  const auto until = Clock::now() + dur;
+  const auto until = Clock::now() + 500ms;
   while (Clock::now() < until) { /* consome CPU, como uma callback "pesada" */ }
   log_event("run", name, start, now_ms());
 }
@@ -138,86 +138,9 @@ private:
   std::map<std::string, rclcpp::Client<std_srvs::srv::Empty>::SharedPtr> clis_;
 };
 
-// ---------------------------------------------------------------------------
-// Modo "robo": a mesma cena do slide 6 (robô aspirador), com tempos x100.
-//   Ler sensor: timer a cada 600 ms, trabalha 200 ms
-//   Bateria:    subscriber, trabalha 500 ms
-//   Desviar:    subscriber (a urgente), trabalha 300 ms
-// Em t = 0 o sensor e a bateria estão prontos (comanda 1).
-// Em t = 50 ms chega "parede!" para o Desviar: ele espera a comanda inteira.
-// ---------------------------------------------------------------------------
-class Robo : public rclcpp::Node {
-public:
-  Robo() : Node("robo") {
-    auto qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable();
-    desviar_ = create_subscription<std_msgs::msg::Empty>(
-      "parede", qos, [](std_msgs::msg::Empty::ConstSharedPtr) { busy("desviar", 300ms); });
-    bateria_ = create_subscription<std_msgs::msg::Empty>(
-      "bateria", qos, [](std_msgs::msg::Empty::ConstSharedPtr) { busy("bateria", 500ms); });
-  }
-
-  void create_sensor_timer() {
-    sensor_ = create_wall_timer(600ms, []() { busy("sensor", 200ms); });
-  }
-
-private:
-  rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr desviar_, bateria_;
-  rclcpp::TimerBase::SharedPtr sensor_;
-};
-
-static int run_robo() {
-  auto robo = std::make_shared<Robo>();
-  auto mundo = std::make_shared<rclcpp::Node>("mundo");   // quem manda as mensagens
-  auto qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable();
-  auto pub_parede = mundo->create_publisher<std_msgs::msg::Empty>("parede", qos);
-  auto pub_bateria = mundo->create_publisher<std_msgs::msg::Empty>("bateria", qos);
-  while (pub_parede->get_subscription_count() == 0 || pub_bateria->get_subscription_count() == 0) {
-    std::this_thread::sleep_for(50ms);
-  }
-  std::this_thread::sleep_for(500ms);
-
-  // O timer é criado 600 ms antes de T0, então ele vence exatamente em T0.
-  T0 = Clock::now() + 600ms;
-  robo->create_sensor_timer();
-  for (int k = 0; k < 3; ++k) log_event("arrive", "sensor", 600.0 * k, 600.0 * k);
-
-  rclcpp::executors::SingleThreadedExecutor exec;
-  exec.add_node(robo);
-
-  std::this_thread::sleep_until(T0);
-  log_event("arrive", "bateria", now_ms(), now_ms());
-  pub_bateria->publish(std_msgs::msg::Empty());
-  std::this_thread::sleep_until(T0 + 10ms);   // sensor e bateria já prontos: comanda 1
-
-  std::thread parede([pub_parede]() {
-    std::this_thread::sleep_until(T0 + 50ms);
-    log_event("arrive", "desviar", now_ms(), now_ms());
-    pub_parede->publish(std_msgs::msg::Empty());
-  });
-  std::thread stopper([&exec]() {
-    std::this_thread::sleep_until(T0 + 1500ms);
-    exec.cancel();
-  });
-  printf("evento nome     inicio   fim  (ms, relativos a T0)\n");
-  exec.spin();
-  parede.join();
-  stopper.join();
-  return 0;
-}
-
 int main(int argc, char ** argv) {
   rclcpp::init(argc, argv);
   const std::string kind = argc > 1 ? argv[1] : "single";
-
-  if (kind == "robo") {
-    trace.open("trace_robo.csv");
-    trace << "evento,nome,inicio_ms,fim_ms\n";
-    run_robo();
-    trace.close();
-    rclcpp::shutdown();
-    printf("\nTrace salvo em trace_robo.csv\n");
-    return 0;
-  }
 
   std::shared_ptr<rclcpp::Executor> exec;
   if (kind == "single") {

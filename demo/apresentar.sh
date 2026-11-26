@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Roda o experimento ao vivo e abre o Gantt no Windows.
-# Uso (no Ubuntu/WSL):  bash ~/ros2-rta-seminario/demo/apresentar.sh [robo|single|events|multi]
+# Uso (no Ubuntu/WSL):  bash ~/ros2-rta-seminario/demo/apresentar.sh [single|events|multi]
 set -eo pipefail
 
 EX="${1:-single}"

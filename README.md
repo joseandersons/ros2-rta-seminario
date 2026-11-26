@@ -12,7 +12,6 @@ Dupla: Vinícius Rafael e José Anderson.
 |---|---|
 | [`slides/`](slides/) | Slides da apresentação (30 min): link, fonte e roteiro |
 | [`artefatos/`](artefatos/) | Material de apoio: resumo do artigo, situação atual e análise do executor no Jazzy |
-| [`demo/rta/`](demo/rta/) | Calculadora em Python da análise de tempo de resposta do artigo (Lemas 2–8) |
 | [`demo/ros2_ws/`](demo/ros2_ws/) | Nó ROS 2 que reproduz o experimento de validação do executor (Fig. 3 do artigo) |
 | [`demo/gantt.py`](demo/gantt.py) | Gera o diagrama de Gantt a partir do trace do nó ROS 2 |
 
@@ -20,9 +19,10 @@ Instruções de execução: [`demo/README.md`](demo/README.md).
 
 ## Início rápido
 
+No Ubuntu (WSL) com o ROS 2 Jazzy instalado:
+
 ```bash
-pip install matplotlib
-python demo/rta/rta_ros2.py --plot
+bash ~/ros2-rta-seminario/demo/apresentar.sh single
 ```
 
 ## Referências

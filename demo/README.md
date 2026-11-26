@@ -1,37 +1,10 @@
 # Demo do seminário: RTA de cadeias ROS 2 (Casini et al., ECRTS 2019)
 
-São duas demonstrações independentes:
-
-| Parte | O que mostra | Precisa de |
-|---|---|---|
-| `rta/rta_ros2.py` | As equações do artigo (Lemas 2–8) aplicadas a um exemplo: tempos de resposta, latência da cadeia e varredura do orçamento da reserva (como a Fig. 8a) | Só Python (+ matplotlib para o gráfico) |
-| `ros2_ws/` + `gantt.py` | O experimento de validação da Seção 3 (Fig. 3) rodando num **ROS 2 atual**, para responder "o comportamento de 2018 continua válido?" | Linux/WSL2 com ROS 2 Jazzy |
+A demonstração é o experimento de validação da Seção 3 (Fig. 3) do artigo rodando num **ROS 2 atual** (`ros2_ws/` + `gantt.py`), para responder "o comportamento de 2018 continua válido?". Precisa de Linux/WSL2 com ROS 2 Jazzy.
 
 ---
 
-## Parte 1: calculadora de RTA (roda no Windows)
-
-```bash
-cd rta
-python rta_ros2.py --plot
-```
-
-O que apontar na apresentação:
-
-1. **Prioridade não adianta para subscribers.** Compare as colunas `R ideal` (prioridade fixa não preemptiva, como na aula) e `R ROS 2`. `s_filtro` é a subscriber de maior prioridade, mas no ROS 2 sofre interferência de *todas* as outras callbacks (Eq. 6). Por isso seu R sobe de 74 para 199 ms.
-2. **Timers não mudam:** eles não dependem de polling points (Lema 3), então os dois valores são iguais.
-3. **Análise holística vs. soma** (Seção 5.4): 104 ms contra 441 ms. Somar os R individuais conta as rajadas várias vezes ("pay burst only once").
-4. **Dimensionamento da reserva:** abaixo de 50% de banda a análise não converge. Acima disso, a latência cai, como na Fig. 8a do artigo.
-
-Ligação com as aulas:
-- A iteração `sbf(A+R) >= demanda(R)` é a **mesma RTA da aula** (`R = C + Σ⌈R/T⌉C`), com `sbf` no lugar de `t`.
-- O bloqueio `B = max e` de prioridade menor é o bloqueio de escalonamento **não preemptivo**.
-
-Para mudar o exemplo, edite `example_system()`. A lista está em ordem de prioridade: timers primeiro, depois subscribers na ordem de registro.
-
----
-
-## Parte 2: experimento no ROS 2 real (Linux)
+## Experimento no ROS 2 real (Linux)
 
 ### Instalação (uma vez, no Windows)
 
