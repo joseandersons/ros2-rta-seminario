@@ -9,9 +9,7 @@
 <tr><td>Instâncias por janela</td><td>Uma por callback</td><td>Uma por callback</td><td>igual</td></tr>
 <tr><td>Ordem entre tipos</td><td>Timer, sub, service</td><td>Timer, sub, service</td><td>igual</td></tr>
 <tr class="hl"><td>Timers e o polling point</td><td>Não esperam</td><td>Esperam a janela</td><td>mudou</td></tr>
-<tr class="hl"><td>Ordem dentro do tipo</td><td>Ordem de registro</td><td>Invertida (L, M, H)</td><td>mudou</td></tr>
-<tr><td>EventsExecutor (novo)</td><td>Não existia</td><td>Ordem de chegada</td><td>novo</td></tr>
-</table>
+<tr class="hl"><td>Ordem dentro do tipo</td><td>Ordem de registro</td><td>Invertida (L, M, H)</td><td>mudou</td></tr></table>
 <div class="stack" style="gap:10px;">
 <div class="row" style="gap:16px;"><p class="pill ok" style="flex:none;">confirmado</p><p class="small">Mesmo resultado rodando o <b>código original dos autores</b> no Jazzy.</p></div>
 <p class="small">A ordem dentro do tipo varia entre execuções. A causa está no código do rclcpp: as callbacks ficam num <span class="mono">std::unordered_map</span>.</p>
