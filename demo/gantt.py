@@ -42,7 +42,10 @@ def main():
     with path.open(newline="", encoding="utf-8") as f:
         for row in csv.DictReader(f):
             a, b = float(row["inicio_ms"]), float(row["fim_ms"])
-            (runs if row["evento"] == "run" else arrivals)[row["nome"]].append((a, b))
+            if row["evento"] == "run":
+                runs[row["nome"]].append((a, b))
+            elif row["evento"] == "arrive":
+                arrivals[row["nome"]].append((a, b))
 
     names = [n for n in ORDER if n in runs or n in arrivals]
     y = {n: i for i, n in enumerate(reversed(names))}

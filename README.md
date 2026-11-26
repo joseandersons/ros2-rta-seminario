@@ -14,6 +14,7 @@ Dupla: Vinícius Rafael e José Anderson.
 | [`artefatos/`](artefatos/) | Material de apoio: resumo do artigo, situação atual e análise do executor no Jazzy |
 | [`demo/ros2_ws/`](demo/ros2_ws/) | Nó ROS 2 que reproduz o experimento de validação do executor (Fig. 3 do artigo) |
 | [`demo/gantt.py`](demo/gantt.py) | Gera o diagrama de Gantt a partir do trace do nó ROS 2 |
+| [`demo/live.py`](demo/live.py) | Mostra as callbacks sendo executadas ao vivo, numa janela, enquanto o nó roda |
 
 Instruções de execução: [`demo/README.md`](demo/README.md).
 

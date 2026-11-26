@@ -2,6 +2,8 @@
 
 A demonstração é o experimento de validação da Seção 3 (Fig. 3) do artigo rodando num **ROS 2 atual** (`ros2_ws/` + `gantt.py`), para responder "o comportamento de 2018 continua válido?". Precisa de Linux/WSL2 com ROS 2 Jazzy.
 
+Para apresentar, use `bash ~/ros2-rta-seminario/demo/apresentar.sh single`: abre uma janela (`live.py`) que desenha as callbacks ao vivo, com as barras crescendo enquanto rodam, os ▼ das chegadas e a espera tracejada. No fim, também salva o Gantt em `ao_vivo/trace_single.png`.
+
 ---
 
 ## Experimento no ROS 2 real (Linux)

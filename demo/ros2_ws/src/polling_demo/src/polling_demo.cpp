@@ -50,11 +50,24 @@ static void log_event(const std::string & ev, const std::string & name, double a
   std::lock_guard<std::mutex> lk(log_mtx);
   trace << ev << "," << name << "," << a << "," << b << "\n";
   trace.flush();
-  printf("%-6s %-4s %8.1f %8.1f\n", ev.c_str(), name.c_str(), a, b);
+  if (ev != "start") printf("%-6s %-4s %8.1f %8.1f\n", ev.c_str(), name.c_str(), a, b);
+}
+
+// Marca T0 no relógio de parede, para a visualização ao vivo (live.py)
+// saber quanto tempo passou desde o início do experimento.
+static void log_epoch() {
+  const double ms = std::chrono::duration<double, std::milli>(
+    std::chrono::system_clock::now().time_since_epoch()).count();
+  std::lock_guard<std::mutex> lk(log_mtx);
+  char buf[64];
+  snprintf(buf, sizeof(buf), "%.1f", ms);
+  trace << "epoch,T0," << buf << "," << buf << "\n";
+  trace.flush();
 }
 
 static void busy(const std::string & name) {
   const double start = now_ms();
+  log_event("start", name, start, start);   // a callback começou a rodar
   const auto until = Clock::now() + 500ms;
   while (Clock::now() < until) { /* consome CPU, como uma callback "pesada" */ }
   log_event("run", name, start, now_ms());
@@ -165,6 +178,7 @@ int main(int argc, char ** argv) {
   std::this_thread::sleep_for(500ms);
 
   T0 = Clock::now();
+  log_epoch();
   exp->create_timers();
   exec->add_node(exp);
   std::thread driver_thread([drv]() { drv->run(); });
