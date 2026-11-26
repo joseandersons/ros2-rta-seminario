@@ -1,12 +1,12 @@
 """
 Visualização ao vivo do experimento (Fig. 3 do artigo).
 
-Abre uma janela e desenha as callbacks enquanto o nó polling_demo roda:
+Abre uma janela e desenha as callbacks enquanto o experimento roda:
 as barras crescem enquanto a callback executa, os ▼ aparecem quando a
 mensagem/timer chega e a linha tracejada cinza mostra quanto tempo cada
 uma ficou esperando o executor.
 
-Uso (o apresentar.sh já faz isso):
+Uso (o ao_vivo.sh já faz isso):
     python3 live.py trace_single.csv [duração_ms]
 
 Funciona com o trace da nossa reprodução (H, M, L, SH...) e com o trace do

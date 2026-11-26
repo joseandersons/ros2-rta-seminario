@@ -3,9 +3,6 @@ __pycache__/
 *.pyc
 
 # colcon (ROS 2)
-demo/ros2_ws/build/
-demo/ros2_ws/install/
-demo/ros2_ws/log/
 
 # Arquivos temporários do PowerPoint / Office
 ~$*
@@ -14,5 +11,4 @@ demo/ros2_ws/log/
 .DS_Store
 Thumbs.db
 desktop.ini
-demo/ao_vivo/
 original/ao_vivo/

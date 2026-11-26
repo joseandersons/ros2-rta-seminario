@@ -12,18 +12,16 @@ Dupla: Vinícius Rafael e José Anderson.
 |---|---|
 | [`slides/`](slides/) | Slides da apresentação (30 min): link, fonte e roteiro |
 | [`artefatos/`](artefatos/) | Material de apoio: resumo do artigo, situação atual e análise do executor no Jazzy |
-| [`demo/ros2_ws/`](demo/ros2_ws/) | Nó ROS 2 que reproduz o experimento de validação do executor (Fig. 3 do artigo) |
-| [`demo/gantt.py`](demo/gantt.py) | Gera o diagrama de Gantt a partir do trace do nó ROS 2 |
-| [`demo/live.py`](demo/live.py) | Mostra as callbacks sendo executadas ao vivo, numa janela, enquanto o nó roda |
+| [`original/`](original/) | **Demo:** o código original dos autores (experimento da Fig. 3) rodando no ROS 2 Jazzy, com gráfico ao vivo |
 
-Instruções de execução: [`demo/README.md`](demo/README.md).
+Instruções de execução: [`original/README.md`](original/README.md).
 
 ## Início rápido
 
 No Ubuntu (WSL) com o ROS 2 Jazzy instalado:
 
 ```bash
-bash ~/ros2-rta-seminario/demo/apresentar.sh single
+bash ~/ros2-rta-seminario/original/ao_vivo.sh
 ```
 
 ## Referências

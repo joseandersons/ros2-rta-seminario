@@ -1,6 +1,6 @@
 """
 Transforma os logs do código ORIGINAL dos autores num trace CSV, enquanto o
-experimento roda, para a janela ao vivo (demo/live.py) desenhar.
+experimento roda, para a janela ao vivo (live.py) desenhar.
 
 O código dos autores não é alterado: só lemos o que ele já imprime.
   - nó arbitrary_cb_time (log do ROS, com horário):

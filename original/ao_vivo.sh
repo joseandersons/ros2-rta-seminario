@@ -5,7 +5,7 @@
 set -eo pipefail
 
 AQUI="$(cd "$(dirname "$0")" && pwd)"
-DEMO="$AQUI/../demo"
+LIVE_PY="$AQUI/live.py"
 WS="$HOME/orig_ws"
 OUT="$AQUI/ao_vivo"
 mkdir -p "$OUT" "$WS/src"
@@ -33,7 +33,7 @@ trap 'kill "$NO" 2>/dev/null || true' EXIT
 python3 "$AQUI/coletor.py" no.log script.log trace_autores.csv &
 COLETOR=$!
 if [ -n "$DISPLAY$WAYLAND_DISPLAY" ]; then
-  python3 "$DEMO/live.py" trace_autores.csv 9500 &
+  python3 "$LIVE_PY" trace_autores.csv 9500 &
   LIVE=$!
 fi
 sleep 2
