@@ -29,7 +29,7 @@ public:
                                                     std::bind(&ArbitraryCBTimeNode::timerCreator,this,_1,_2,_3));
     const std::string names[] = { "high", "medium", "low" };
     for (const auto& name : names) {
-      subs.push_back(this->create_subscription<std_msgs::msg::Int32>(std::string("~/")+name,
+      subs.push_back(this->create_subscription<std_msgs::msg::Int32>(std::string("~/")+name, 10,  // [Jazzy] QoS obrigatório
 								     [this,name] (const typename std_msgs::msg::Int32::SharedPtr msg) {
 								       this->simulateExecution("topic", name, milliseconds(msg->data));}));
       servs.push_back(this->create_service<srv::Int32>(std::string("~/")+"srv_"+name,
@@ -40,7 +40,7 @@ public:
 							 this->simulateExecution("service", std::string("srv_")+name, milliseconds(request->time));}));
       
     }
-    execution_order_publisher = this->create_publisher<std_msgs::msg::String>("~/execution_order");
+    execution_order_publisher = this->create_publisher<std_msgs::msg::String>("~/execution_order", 10);  // [Jazzy] QoS obrigatório
   }
   
   void timerCreator(const std::shared_ptr<rmw_request_id_t> request_header,
@@ -72,7 +72,7 @@ private:
   /* Trigger a timer in N milliseconds, running for M milliseconds */
   rclcpp::Service<srv::Duration>::SharedPtr timerCtrl;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr execution_order_publisher;
-  uint32_t nextTimerId;
+  uint32_t nextTimerId = 0;  // [Jazzy] inicializado (no original ficava sem valor)
 
   void simulateExecution(const std::string category, const std::string name, std::chrono::milliseconds time) {
     RCLCPP_INFO(get_logger(), "Received %s on %s for %d ms\n", category.c_str(), name.c_str(), (int32_t)time.count());

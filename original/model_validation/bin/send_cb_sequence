@@ -44,7 +44,7 @@ def spin_nonblocking(node, max_block=1):
 
 @contextlib.contextmanager
 def temporary_subscription(node, typ, name, func):
-    sub = node.create_subscription(typ, name, func)
+    sub = node.create_subscription(typ, name, func, 10)  # [Jazzy] QoS obrigatório
     try:
         yield sub
     finally:
@@ -53,7 +53,7 @@ class SendCBSequenceNode(rclpy.node.Node):
     def __init__(self,name='send_cb_sequence_node', prefix='/arbitrary_cb_time_node/'):
         super().__init__(name)
         self.prefix = prefix
-        self.pubs = { cb: self.create_publisher(typ, prefix+cb) for cb,typ in topics.items() }
+        self.pubs = { cb: self.create_publisher(typ, prefix+cb, 10) for cb,typ in topics.items() }  # [Jazzy] QoS obrigatório
         self.cls = { srv: self.create_client(typ, prefix+srv) for srv,typ in services.items() }
         self.timerCtrl = self.create_client(Duration, prefix+"timer")
 

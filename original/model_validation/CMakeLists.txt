@@ -1,36 +1,18 @@
 cmake_minimum_required(VERSION 3.5)
 
-function(generate_interfaces)
-  file(GLOB_RECURSE ifs
-    RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-    "msg/*.msg"
-    "srv/*.srv")
-
-  if(NOT ifs)
-    return()
-  endif()
-
-  find_package(rosidl_default_generators REQUIRED)
-  rosidl_generate_interfaces(${PROJECT_NAME} ${ifs})
-  get_default_rmw_implementation(rmw)
-  find_package("${rmw}" REQUIRED)
-  get_rmw_typesupport(impls "${rmw}" LANGUAGE "cpp")
-  foreach(target ${${PROJECT_NAME}_EXECUTABLES}${${PROJECT_NAME}_LIBRARIES})
-    foreach(impl ${impls})
-      rosidl_target_interfaces(${target} ${PROJECT_NAME} ${impl})
-    endforeach()
-  endforeach()
-endfunction()
-
-
 project(model_validation)
 add_compile_options(-g -Wall -Wextra)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)  # [Jazzy] rclcpp exige C++17
 
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
+# [Jazzy] a função generate_interfaces() do original usava APIs removidas
+# (rosidl_target_interfaces); aqui as interfaces são ligadas do jeito atual.
+find_package(rosidl_default_generators REQUIRED)
+rosidl_generate_interfaces(${PROJECT_NAME} "msg/Duration.msg" "srv/Duration.srv" "srv/Int32.srv")
 ament_auto_add_executable(arbitrary_cb_time src/arbitrary_cb_time.cpp)
-generate_interfaces()
+rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} "rosidl_typesupport_cpp")
+target_link_libraries(arbitrary_cb_time "${cpp_typesupport_target}")
 
 install(DIRECTORY bin/ DESTINATION bin
   FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
