@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Roda o experimento ao vivo e mostra as callbacks sendo executadas numa janela.
-# Uso (no Ubuntu/WSL):  bash ~/ros2-rta-seminario/demo/apresentar.sh [single|events|multi]
+# Uso (no Ubuntu/WSL):  bash ~/ros2-rta-seminario/demo/apresentar.sh [single]
 set -eo pipefail
 
 EX="${1:-single}"

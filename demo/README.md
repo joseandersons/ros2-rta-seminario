@@ -36,11 +36,9 @@ colcon build
 source install/setup.bash
 
 ros2 run polling_demo polling_demo single   # executor single-threaded (o do artigo)
-ros2 run polling_demo polling_demo events   # EventsExecutor (mais novo), para comparar
-ros2 run polling_demo polling_demo multi    # MultiThreadedExecutor
 ```
 
-Cada execução leva ~10 s e gera `trace_<executor>.csv` na pasta atual. Copie os CSVs de volta para o Windows e gere o Gantt:
+Cada execução leva ~10 s e gera `trace_single.csv` na pasta atual. Copie os CSVs de volta para o Windows e gere o Gantt:
 
 ```bash
 cp trace_*.csv <pasta-do-repo>/demo/
@@ -61,10 +59,8 @@ python gantt.py trace_single.csv
 2. **Polling point:** `SM` chega em 1500 ms, mas só executa depois que a janela atual esvazia.
 3. **Ordem de prioridade:** timers, depois subscribers, services e clients; dentro de cada tipo, a ordem de registro.
 4. **Timers furam o polling point?** No Crystal (2018), sim. **Se no Jazzy for diferente, isso é um resultado do seminário**: o modelo do artigo envelheceu e os trabalhos posteriores tiveram de revisá-lo.
-5. **`events` vs `single`:** o EventsExecutor usa uma fila de eventos em vez do readySet. Vejam se as duas mensagens `H` passam a rodar seguidas e se a ordem muda para FIFO.
 
 ### Limitações (digam na apresentação)
 
 - WSL2 é uma VM e o kernel não é PREEMPT_RT, então os tempos têm ruído de milissegundos. O que importa é a **ordem** de execução, não os tempos exatos.
-- No `multi`, as callbacks do nó caem no mesmo callback group mutuamente exclusivo (padrão), então continuam serializadas.
-- O código ROS 2 foi escrito para o Jazzy, mas não foi compilado aqui (a máquina não tinha WSL nem Docker). Se der erro de compilação, o mais provável é a parte do EventsExecutor: comentem o bloco `#if __has_include(...)`.
+- O código foi compilado e testado no ROS 2 Jazzy (Ubuntu 24.04 no WSL2).

@@ -15,7 +15,7 @@
 //   evento = "run"    -> execução de callback
 //   evento = "arrive" -> chegada (envio) da mensagem/request
 //
-// Uso: ros2 run polling_demo polling_demo [single|multi|events]
+// Uso: ros2 run polling_demo polling_demo [single]
 #include <atomic>
 #include <chrono>
 #include <fstream>
@@ -29,11 +29,6 @@
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/empty.hpp"
 #include "std_srvs/srv/empty.hpp"
-
-#if __has_include(<rclcpp/experimental/executors/events_executor/events_executor.hpp>)
-#include "rclcpp/experimental/executors/events_executor/events_executor.hpp"
-#define HAS_EVENTS_EXECUTOR 1
-#endif
 
 using namespace std::chrono_literals;
 using Clock = std::chrono::steady_clock;
@@ -155,19 +150,12 @@ int main(int argc, char ** argv) {
   rclcpp::init(argc, argv);
   const std::string kind = argc > 1 ? argv[1] : "single";
 
-  std::shared_ptr<rclcpp::Executor> exec;
-  if (kind == "single") {
-    exec = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
-  } else if (kind == "multi") {
-    exec = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
-#ifdef HAS_EVENTS_EXECUTOR
-  } else if (kind == "events") {
-    exec = std::make_shared<rclcpp::experimental::executors::EventsExecutor>();
-#endif
-  } else {
-    fprintf(stderr, "executor desconhecido: %s\n", kind.c_str());
+  if (kind != "single") {
+    fprintf(stderr, "executor desconhecido: %s (use single)\n", kind.c_str());
     return 1;
   }
+  // O executor analisado no artigo: single-threaded, com polling points
+  auto exec = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
 
   trace.open("trace_" + kind + ".csv");
   trace << "evento,nome,inicio_ms,fim_ms\n";

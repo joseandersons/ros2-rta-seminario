@@ -47,11 +47,11 @@ colcon build
 source install/setup.bash
 
 # ---------------------------------------------------------------- experimento
-step "4/4 Rodando o experimento (~10 s por executor)"
+step "4/4 Rodando o experimento (~10 s)"
 OUT="$REPO/demo/results"
 mkdir -p "$OUT"
 cd "$OUT"
-for ex in single events multi; do
+for ex in single; do
   echo; echo "--- executor: $ex ---"
   if ros2 run polling_demo polling_demo "$ex" > "log_$ex.txt" 2>&1; then
     python3 "$REPO/demo/gantt.py" "trace_$ex.csv" | tail -n 2
